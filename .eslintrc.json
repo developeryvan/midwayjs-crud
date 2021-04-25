@@ -1,0 +1,24 @@
+{
+  "env": { "jest": true },
+  "extends": "./node_modules/mwts/",
+  "plugins": ["unicorn", "import"],
+  "ignorePatterns": ["node_modules", "dist", "test", "jest.config.js", "typings"],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": 1,
+    "camelcase": 2,
+    "eqeqeq": [2, "always"],
+    "no-multiple-empty-lines": [2, { "max": 1 }],
+    "object-shorthand": 2,
+    "quote-props": [2, "consistent"],
+    "space-before-function-paren": [2, { "anonymous": "always", "named": "never", "asyncArrow": "always" }],
+    "unicorn/filename-case": [2, { "case": "snakeCase" }],
+    "import/order": [
+      2,
+      {
+        "groups": ["builtin", "external", "internal", "parent", "sibling", "index", "unknown", "object"],
+        "pathGroupsExcludedImportTypes": ["builtin"],
+        "newlines-between": "always"
+      }
+    ]
+  }
+}

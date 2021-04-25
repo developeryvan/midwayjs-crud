@@ -1,0 +1,68 @@
+{
+  "name": "midwayjs-crud",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "author": "Yvan",
+  "license": "MIT",
+  "scripts": {
+    "start": "egg-scripts start --daemon --title=my-midway-project --framework=@midwayjs/web",
+    "stop": "egg-scripts stop --title=my-midway-project",
+    "start_build": "npm run build && cross-env NODE_ENV=development midway-bin dev",
+    "dev": "cross-env ets && cross-env NODE_ENV=local midway-bin dev --ts --fast",
+    "test": "midway-bin test --ts",
+    "cov": "midway-bin cov --ts",
+    "lint": "mwts check",
+    "lint:fix": "mwts fix",
+    "ci": "npm run cov",
+    "build": "midway-bin build -c",
+    "check": "luckyeye"
+  },
+  "dependencies": {
+    "@midwayjs/bootstrap": "^2.10.7",
+    "@midwayjs/core": "^2.10.7",
+    "@midwayjs/decorator": "^2.10.7",
+    "@midwayjs/logger": "^2.10.7",
+    "@midwayjs/web": "^2.10.7",
+    "@typegoose/typegoose": "^7.6.0",
+    "egg": "^2.29.4",
+    "egg-cors": "^2.2.3",
+    "egg-scripts": "^2.13.0",
+    "ioredis": "^4.26.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "5.10.18",
+    "nacos": "^2.1.0",
+    "path-to-regexp": "^6.2.0",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "@midwayjs/cli": "^1.2.63",
+    "@midwayjs/egg-ts-helper": "^1.1.0",
+    "@midwayjs/luckyeye": "^1.0.2",
+    "@midwayjs/mock": "^2.10.7",
+    "@types/ioredis": "^4.22.3",
+    "@types/jest": "^26.0.22",
+    "@types/jsonwebtoken": "^8.5.1",
+    "@types/mongoose": "^5.10.5",
+    "@types/node": "^14.14.41",
+    "@types/request": "^2.48.5",
+    "cross-env": "^7.0.3",
+    "eslint": "^7.24.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-unicorn": "^29.0.0",
+    "jest": "^26.6.3",
+    "mwts": "^1.2.2",
+    "prettier": "^2.2.1",
+    "ts-jest": "^26.5.5",
+    "typescript": "^4.2.4"
+  },
+  "midway-bin-clean": [
+    ".vscode/.tsbuildinfo",
+    "dist"
+  ],
+  "midway-luckyeye": {
+    "packages": [
+      "midway_v2"
+    ]
+  }
+}
