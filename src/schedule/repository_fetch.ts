@@ -6,6 +6,6 @@ import { RepositoryService } from '../service/repository';
 export class RepositoryFetchCron implements CommonSchedule {
   @Inject() repositoryService: RepositoryService;
   async exec() {
-    this.repositoryService.fetch({ q: 'language:typescript stars:>100', order: 'desc' });
+    this.repositoryService.fetch({ q: 'language:typescript stars:>10000', order: 'desc' });
   }
 }

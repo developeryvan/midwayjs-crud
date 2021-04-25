@@ -5,6 +5,6 @@ export class Repository {
   @prop({ required: true, unique: true }) name: string;
   @prop({ required: true }) url: string;
   @prop({ required: true }) description: string;
-  @prop({ required: true }) star: string;
+  @prop({ required: true }) star: number;
   @prop({ required: true }) lastPushedAt: Date;
 }
