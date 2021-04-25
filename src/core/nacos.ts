@@ -12,8 +12,9 @@ export default class Nacos {
     const nacosClient = new nacosConfigClient(this.nacosConfig);
     await nacosClient.ready();
     const configStr = await nacosClient.getConfig(dataId, group);
-    this.config = JSON.parse(configStr);
-    this.logger.info(`nacos: config (${dataId}) is loaded!`);
+    console.log(configStr);
+    this.config = configStr && JSON.parse(configStr);
+    this.config && this.logger.info(`nacos: config (${dataId}) is loaded!`);
   }
   public getConfig(name: string) {
     return this.config[name];
