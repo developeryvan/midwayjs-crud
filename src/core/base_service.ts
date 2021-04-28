@@ -1,7 +1,7 @@
 import { Init, Inject } from '@midwayjs/decorator';
 import { getModelForClass } from '@typegoose/typegoose';
 import { ReturnModelType, AnyParamConstructor, DocumentType } from '@typegoose/typegoose/lib/types';
-import { FilterQuery } from 'mongoose';
+import { FilterQuery, ModelUpdateOptions, QueryFindOptions, UpdateQuery } from 'mongoose';
 
 import Mongodb from './mongodb';
 export class BaseService<T> {
@@ -11,8 +11,8 @@ export class BaseService<T> {
   @Init() async init() {
     this.model = getModelForClass(this.uninitializedClass, { existingConnection: this.mongodb.getConnection(this.connectionName) });
   }
-  async findAll(filter): Promise<DocumentType<T>[]> {
-    const models = await this.model.find(filter);
+  async findAll(filter: FilterQuery<DocumentType<T>>, projection?: any | null, options?: QueryFindOptions): Promise<DocumentType<T>[]> {
+    const models = await this.model.find(filter, projection, options);
     return models;
   }
   async findOne(filter: FilterQuery<DocumentType<T>>): Promise<DocumentType<T>> {
@@ -25,6 +25,10 @@ export class BaseService<T> {
   }
   async create(data): Promise<DocumentType<T>> {
     const model = await this.model.create(data);
+    return model;
+  }
+  async update(filter: FilterQuery<DocumentType<T>>, data: UpdateQuery<DocumentType<T>>, options: ModelUpdateOptions): Promise<DocumentType<T>> {
+    const model = await this.model.updateMany(filter, data, options);
     return model;
   }
   async updateById(id: string, data): Promise<DocumentType<T>> {
