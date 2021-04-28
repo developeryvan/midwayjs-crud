@@ -2,14 +2,14 @@ import { Inject, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
 import * as jwt from 'jsonwebtoken';
 
 import Nacos from '../core/nacos';
-import Redis from '../core/redis';
 
+import { Lock } from './lock';
 import { Crypto } from './crypto';
 @Scope(ScopeEnum.Singleton)
 @Provide()
 export class Jwt {
   @Inject() nacos: Nacos;
-  @Inject() redis: Redis;
+  @Inject() lock: Lock;
   @Inject() crypto: Crypto;
   sign(payload: string | { [key: string]: any }, secretOrPrivateKey?: string, options?: jwt.SignOptions): string {
     const secret = secretOrPrivateKey ? secretOrPrivateKey : this.nacos.getConfig('jwt').secret;
@@ -23,11 +23,11 @@ export class Jwt {
   }
   async revoke(token: string) {
     const key = this.crypto.md5(token);
-    await this.redis.getConnection('cache').set(key, 1, 'EX', this.nacos.getConfig('jwt').signOptions.expiresIn);
+    await this.lock.lock(key, this.nacos.getConfig('jwt').signOptions.expiresIn);
   }
   async checkRevoked(token: string) {
     const key = this.crypto.md5(token);
-    const result = await this.redis.getConnection('cache').get(key);
-    return !!result;
+    const result = await this.lock.checkLock(key);
+    return result;
   }
 }
