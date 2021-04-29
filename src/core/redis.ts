@@ -14,15 +14,19 @@ export default class Redis {
     const redisConfig = this.nacos.getConfig('redis');
     for (const key in redisConfig.clients) {
       const config = redisConfig.clients[key];
-      this.clients[key] = new IORedis(config);
+      const connection = new IORedis(config);
+      connection
+        .once('connect', () => {
+          this.logger.info(`redis (${key}) connected successfully`);
+        })
+        .on('error', error => {
+          this.logger.error(error);
+        });
+      this.clients[key] = connection;
       this.config[key] = config;
-      this.logger.info(`redis (${key}) connected successfully`);
     }
   }
   getConnection(name: string): IORedis.Redis {
     return this.clients[name];
-  }
-  getConfig(name: string): { uri: string; options } {
-    return this.config[name];
   }
 }

@@ -11,9 +11,9 @@ export default class Mongodb {
   @Logger() logger: ILogger;
   @Inject() nacos: Nacos;
   @Init() async init(): Promise<void> {
-    const mongooseConfig = this.nacos.getConfig('mongoose');
-    for (const key in mongooseConfig.clients) {
-      const { uri, options } = mongooseConfig.clients[key];
+    const mongodbConfig = this.nacos.getConfig('mongodb');
+    for (const key in mongodbConfig.clients) {
+      const { uri, options } = mongodbConfig.clients[key];
       const connection: Connection = createConnection(uri, options);
       connection
         .on('connected', () => {
@@ -28,8 +28,5 @@ export default class Mongodb {
   }
   getConnection(name: string): Connection {
     return this.clients[name];
-  }
-  getConfig(name: string): { uri: string; options } {
-    return this.config[name];
   }
 }
