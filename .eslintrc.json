@@ -2,7 +2,6 @@
   "env": { "jest": true },
   "extends": "./node_modules/mwts/",
   "plugins": ["unicorn", "import"],
-  "ignorePatterns": ["node_modules", "dist", "test", "jest.config.js", "typings"],
   "rules": {
     "prettier/prettier": [
       "error",
@@ -36,5 +35,6 @@
         "newlines-between": "always"
       }
     ]
-  }
+  },
+  "ignorePatterns": ["node_modules", "dist", "test", "jest.config.js", "typings"]
 }
