@@ -4,6 +4,22 @@
   "plugins": ["unicorn", "import"],
   "ignorePatterns": ["node_modules", "dist", "test", "jest.config.js", "typings"],
   "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "arrowParens": "avoid",
+        "bracketSpacing": true,
+        "endOfLine": "lf",
+        "printWidth": 180,
+        "proseWrap": "never",
+        "quoteProps": "consistent",
+        "semi": true,
+        "singleQuote": true,
+        "tabWidth": 2,
+        "trailingComma": "es5",
+        "useTabs": false
+      }
+    ],
     "@typescript-eslint/no-explicit-any": 1,
     "camelcase": 2,
     "eqeqeq": [2, "always"],
