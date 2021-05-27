@@ -1,18 +1,15 @@
-import { Autoload, Init, Inject, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
+import { Autoload, Config, Init, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
 import * as IORedis from 'ioredis';
-
-import Nacos from './nacos';
 @Autoload()
 @Scope(ScopeEnum.Singleton)
 @Provide()
 export default class Redis {
   private clients: { [name: string]: IORedis.Redis } = {};
   private config = {};
-  @Inject() private nacos: Nacos;
+  @Config('redis') redisConfig;
   @Init() protected async init(): Promise<void> {
-    const redisConfig = this.nacos.getConfig('redis');
-    for (const key in redisConfig.clients) {
-      const config = redisConfig.clients[key];
+    for (const key in this.redisConfig.clients) {
+      const config = this.redisConfig.clients[key];
       const connection = new IORedis(config);
       connection
         .once('connect', () => {

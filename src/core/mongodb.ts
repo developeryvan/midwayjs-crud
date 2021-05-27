@@ -1,18 +1,15 @@
-import { Autoload, Init, Inject, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
+import { Autoload, Init, Config, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
 import { Connection, createConnection } from 'mongoose';
-
-import Nacos from './nacos';
 @Autoload()
 @Scope(ScopeEnum.Singleton)
 @Provide()
 export default class Mongodb {
   private clients: { [name: string]: Connection } = {};
   private config: { [name: string]: { uri: string; options } } = {};
-  @Inject() private nacos: Nacos;
+  @Config('mongodb') mongodbConfig;
   @Init() protected async init(): Promise<void> {
-    const mongodbConfig = this.nacos.getConfig('mongodb');
-    for (const key in mongodbConfig.clients) {
-      const { uri, options } = mongodbConfig.clients[key];
+    for (const key in this.mongodbConfig.clients) {
+      const { uri, options } = this.mongodbConfig.clients[key];
       const connection: Connection = createConnection(uri, options);
       connection
         .on('connected', () => {
@@ -27,8 +24,5 @@ export default class Mongodb {
   }
   public getConnection(name: string): Connection {
     return this.clients[name];
-  }
-  public getConfig(name: string) {
-    return this.config[name];
   }
 }

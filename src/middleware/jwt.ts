@@ -1,18 +1,16 @@
-import { Inject, Provide } from '@midwayjs/decorator';
+import { Config, Inject, Provide } from '@midwayjs/decorator';
 import { IWebMiddleware, IMidwayWebContext, IMidwayWebNext } from '@midwayjs/web';
 
-import Nacos from '../core/nacos';
 import { PathToRegexp } from '../util/path_to_regexp';
 import { Jwt } from '../util/jwt';
 @Provide()
 export class JwtMiddleware implements IWebMiddleware {
-  @Inject() nacos: Nacos;
+  @Config('jwt.whitelist') whitelist;
   @Inject() pathToRegexp: PathToRegexp;
   @Inject() jwt: Jwt;
   resolve() {
     return async (ctx: IMidwayWebContext, next: IMidwayWebNext): Promise<void> => {
-      const whitelist = this.nacos.getConfig('jwt').whitelist;
-      if (this.pathToRegexp.pathMatch(whitelist, ctx.path, false)) {
+      if (this.pathToRegexp.pathMatch(this.whitelist, ctx.path, false)) {
         await next();
       } else {
         const [, token] = ctx.header.authorization?.trim().split(' ') || ['', ''];

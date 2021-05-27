@@ -1,14 +1,12 @@
 import * as crypto from 'crypto';
 
-import { Inject, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
-
-import Nacos from '../core/nacos';
+import { Config, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
 @Scope(ScopeEnum.Singleton)
 @Provide()
 export class Crypto {
-  @Inject() nacos: Nacos;
+  @Config('cipherKey') cipherKey;
   encrypt(str: string, cipherKey?: string): string {
-    const key = cipherKey || this.nacos.getConfig('cipherKey') || Buffer.alloc(16, 0);
+    const key = cipherKey || this.cipherKey || Buffer.alloc(16, 0);
     const iv = Buffer.alloc(16, 0);
     const cipher = crypto.createCipheriv('aes-128-cbc', key, iv);
     let encrypted = cipher.update(str, 'utf8', 'hex');
@@ -16,7 +14,7 @@ export class Crypto {
     return encrypted;
   }
   decrypt(str: string, cipherKey?: string): string {
-    const key = cipherKey || this.nacos.getConfig('cipherKey') || Buffer.alloc(16, 0);
+    const key = cipherKey || this.cipherKey || Buffer.alloc(16, 0);
     const iv = Buffer.alloc(16, 0);
     const decipher = crypto.createDecipheriv('aes-128-cbc', key, iv);
     let decrypted = decipher.update(str, 'hex', 'utf8');

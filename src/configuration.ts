@@ -1,16 +1,22 @@
 import { join } from 'path';
+import { readdirSync } from 'fs';
 
-import { App, Configuration, MidwayFrameworkType } from '@midwayjs/decorator';
-import { ILifeCycle } from '@midwayjs/core';
-import { Application } from 'egg';
-import { Application as SocketApplication } from '@midwayjs/socketio';
+import { Configuration } from '@midwayjs/decorator';
+import { ILifeCycle, IMidwayContainer } from '@midwayjs/core';
+import { getModelForClass } from '@typegoose/typegoose';
+
+import Mongodb from './core/mongodb';
 @Configuration({ importConfigs: [join(__dirname, './config')], conflictCheck: true })
 export class ContainerLifeCycle implements ILifeCycle {
-  @App() app: Application;
-  @App(MidwayFrameworkType.WS_IO) socketApp: SocketApplication;
-  async onReady() {
-    this.socketApp.on('connection', socket => {
-      console.log(socket.id);
+  async onReady(container: IMidwayContainer) {
+    readdirSync(join(__dirname, './model')).forEach(async name => {
+      const uninitializedClass = require(`./model/${name}`);
+      for (const key in uninitializedClass) {
+        const mongodb = await container.getAsync<Mongodb>('mongodb');
+        const mainConnection = mongodb.getConnection('main');
+        const model = getModelForClass(uninitializedClass[key], { existingConnection: mainConnection });
+        container.registerObject(`${key.toLowerCase()}Model`, model);
+      }
     });
   }
 }

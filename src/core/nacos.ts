@@ -1,20 +1,17 @@
-import { Autoload, Config, Init, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
-import { NacosConfigClient as nacosConfigClient } from 'nacos';
-@Autoload()
+import { App, Config, Init, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
+import { IMidwayApplication } from '@midwayjs/core';
+import { NacosConfigClient } from 'nacos';
 @Scope(ScopeEnum.Singleton)
 @Provide()
-export default class Nacos {
-  private config = {};
+export class Nacos {
   @Config('nacosClient') private nacosConfig;
+  @App() private app: IMidwayApplication;
   @Init() protected async init(): Promise<void> {
     const { dataId, group } = this.nacosConfig;
-    const nacosClient = new nacosConfigClient(this.nacosConfig);
+    const nacosClient = new NacosConfigClient(this.nacosConfig);
     await nacosClient.ready();
     const configStr = await nacosClient.getConfig(dataId, group);
-    this.config = configStr && JSON.parse(configStr);
-    this.config && console.log(`nacos: config (${group}:${dataId}) is loaded!`);
-  }
-  public getConfig(name: string) {
-    return this.config[name];
+    const remoteConfig = configStr && JSON.parse(configStr);
+    this.app.addConfigObject(remoteConfig);
   }
 }
