@@ -1,14 +1,12 @@
 import { Inject, Provide } from '@midwayjs/decorator';
 
-import { BaseService } from '../core/base_service';
-import { User } from '../model/user';
+import BaseService from '../core/base_service';
+import { User, UserModel } from '../model/user';
 import { Crypto } from '../util/crypto';
 import { Jwt } from '../util/jwt';
 @Provide()
 export class UserService extends BaseService<User> {
-  constructor() {
-    super('main', User);
-  }
+  @Inject('userModel') model: UserModel;
   @Inject() crypto: Crypto;
   @Inject() jwt: Jwt;
   async create(body: User) {

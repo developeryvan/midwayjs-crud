@@ -3,9 +3,6 @@ module.exports = {
   arrowParens: 'avoid',
   bracketSpacing: true,
   endOfLine: 'lf',
-  htmlWhitespaceSensitivity: 'strict',
-  jsxBracketSameLine: true,
-  jsxSingleQuote: true,
   printWidth: 180,
   proseWrap: 'never',
   quoteProps: 'consistent',
@@ -14,5 +11,4 @@ module.exports = {
   tabWidth: 2,
   trailingComma: 'es5',
   useTabs: false,
-  vueIndentScriptAndStyle: true,
 };

@@ -1,4 +1,4 @@
-import { ModelOptions, prop } from '@typegoose/typegoose';
+import { ModelOptions, prop, ReturnModelType } from '@typegoose/typegoose';
 @ModelOptions({ schemaOptions: { collection: 'user', timestamps: true } })
 export class User {
   @prop({ required: true, unique: true }) phone: string;
@@ -9,3 +9,4 @@ export class User {
   @prop({ default: 'user' }) roles: string;
   @prop({ default: -1 }) status: number;
 }
+export type UserModel = ReturnModelType<typeof User>;

@@ -1,17 +1,8 @@
-import { Init, Inject } from '@midwayjs/decorator';
-import { getModelForClass } from '@typegoose/typegoose';
-import { ReturnModelType, AnyParamConstructor, DocumentType } from '@typegoose/typegoose/lib/types';
+import { AnyParamConstructor, DocumentType, ReturnModelType } from '@typegoose/typegoose/lib/types';
 import { FilterQuery, ModelUpdateOptions, QueryFindOptions, UpdateQuery } from 'mongoose';
-
-import Mongodb from './mongodb';
-export class BaseService<T> {
-  protected constructor(private readonly connectionName: string, private readonly uninitializedClass: AnyParamConstructor<T>) {}
+export default class BaseService<T> {
   protected model: ReturnModelType<AnyParamConstructor<T>>;
-  @Inject() private mongodb: Mongodb;
-  @Init() async init() {
-    this.model = getModelForClass(this.uninitializedClass, { existingConnection: this.mongodb.getConnection(this.connectionName) });
-  }
-  async findAll(filter: FilterQuery<DocumentType<T>>, projection?: any | null, options?: QueryFindOptions): Promise<DocumentType<T>[]> {
+  async findAll(filter: FilterQuery<DocumentType<T>>, projection?, options?: QueryFindOptions): Promise<DocumentType<T>[]> {
     const models = await this.model.find(filter, projection, options);
     return models;
   }

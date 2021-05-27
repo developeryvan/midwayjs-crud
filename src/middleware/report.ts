@@ -13,9 +13,7 @@ export class ReportMiddleware implements IWebMiddleware {
       const responseTime = Date.now() - startTime;
       const reportService = await ctx.requestContext.getAsync<ReportService>('reportService');
       const report = await reportService.create({ ip, url, method, body: JSON.stringify(body), response: method !== 'GET' ? JSON.stringify(ctx.body) : null, responseTime });
-      if (ctx.body.header) {
-        ctx.body.header = Object.assign(ctx.body.header, { requestId: report._id });
-      }
+      if (ctx.body?.header) ctx.body.header = Object.assign(ctx.body.header, { requestId: report._id });
     };
   }
 }
