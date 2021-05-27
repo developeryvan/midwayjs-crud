@@ -5,11 +5,10 @@ import { Connection, createConnection } from 'mongoose';
 @Provide()
 export default class Mongodb {
   private clients: { [name: string]: Connection } = {};
-  private config: { [name: string]: { uri: string; options } } = {};
-  @Config('mongodb') mongodbConfig;
+  @Config('mongodb.clients') private clientsConfig;
   @Init() protected async init(): Promise<void> {
-    for (const key in this.mongodbConfig.clients) {
-      const { uri, options } = this.mongodbConfig.clients[key];
+    for (const key in this.clientsConfig) {
+      const { uri, options } = this.clientsConfig[key];
       const connection: Connection = createConnection(uri, options);
       connection
         .on('connected', () => {
@@ -19,7 +18,6 @@ export default class Mongodb {
           console.log(error);
         });
       this.clients[key] = connection;
-      this.config[key] = { uri, options };
     }
   }
   public getConnection(name: string): Connection {

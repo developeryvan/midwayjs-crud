@@ -5,11 +5,10 @@ import * as IORedis from 'ioredis';
 @Provide()
 export default class Redis {
   private clients: { [name: string]: IORedis.Redis } = {};
-  private config = {};
-  @Config('redis') redisConfig;
+  @Config('redis.clients') private clientsConfig;
   @Init() protected async init(): Promise<void> {
-    for (const key in this.redisConfig.clients) {
-      const config = this.redisConfig.clients[key];
+    for (const key in this.clientsConfig) {
+      const config = this.clientsConfig[key];
       const connection = new IORedis(config);
       connection
         .once('connect', () => {
@@ -19,13 +18,9 @@ export default class Redis {
           console.log(error);
         });
       this.clients[key] = connection;
-      this.config[key] = config;
     }
   }
   public getConnection(name: string): IORedis.Redis {
     return this.clients[name];
-  }
-  public getConfig(name: string) {
-    return this.config[name];
   }
 }

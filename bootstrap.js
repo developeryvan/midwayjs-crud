@@ -6,6 +6,6 @@ const { Bootstrap } = require('@midwayjs/bootstrap');
 Bootstrap.load(web)
   .load(socket)
   .before(async container => {
-    await container.getAsync('nacos');
+    await container.getAsync('remoteConfig');
   })
   .run();

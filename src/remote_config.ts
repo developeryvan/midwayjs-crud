@@ -3,7 +3,7 @@ import { IMidwayApplication } from '@midwayjs/core';
 import { NacosConfigClient } from 'nacos';
 @Scope(ScopeEnum.Singleton)
 @Provide()
-export class Nacos {
+export class RemoteConfig {
   @Config('nacosClient') private nacosConfig;
   @App() private app: IMidwayApplication;
   @Init() protected async init(): Promise<void> {
