@@ -1,6 +1,6 @@
 import { ModelOptions, prop, ReturnModelType } from '@typegoose/typegoose';
 @ModelOptions({ schemaOptions: { collection: 'user', timestamps: true } })
-export class User {
+export default class User {
   @prop({ required: true, unique: true }) phone: string;
   @prop({ required: true, unique: true }) username: string;
   @prop({ required: true }) nickname: string;

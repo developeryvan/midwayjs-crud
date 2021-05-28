@@ -3,20 +3,13 @@ import * as IORedis from 'ioredis';
 @Autoload()
 @Scope(ScopeEnum.Singleton)
 @Provide()
-export default class Redis {
+export class Redis {
   private clients: { [name: string]: IORedis.Redis } = {};
   @Config('redis.clients') private clientsConfig;
   @Init() protected async init(): Promise<void> {
     for (const key in this.clientsConfig) {
       const config = this.clientsConfig[key];
       const connection = new IORedis(config);
-      connection
-        .once('connect', () => {
-          console.log(`redis (${key}) connected successfully`);
-        })
-        .on('error', error => {
-          console.log(error);
-        });
       this.clients[key] = connection;
     }
   }

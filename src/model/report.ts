@@ -1,6 +1,7 @@
 import { ModelOptions, prop, ReturnModelType } from '@typegoose/typegoose';
 @ModelOptions({ schemaOptions: { collection: 'report', timestamps: true } })
-export class Report {
+export default class Report {
+  public static connectionName = 'log';
   @prop({ required: true }) ip: string;
   @prop({ required: true }) url: string;
   @prop({ required: true }) method: string;

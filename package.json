@@ -1,6 +1,6 @@
 {
   "name": "midwayjs-crud",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "description": "",
   "author": "Yvan",
@@ -17,12 +17,12 @@
     "check": "luckyeye"
   },
   "dependencies": {
-    "@midwayjs/bootstrap": "^2.10.14",
-    "@midwayjs/core": "^2.10.14",
-    "@midwayjs/decorator": "^2.10.14",
-    "@midwayjs/logger": "^2.10.15",
-    "@midwayjs/socketio": "^2.10.14",
-    "@midwayjs/web": "^2.10.14",
+    "@midwayjs/bootstrap": "^2.10.18",
+    "@midwayjs/core": "^2.10.18",
+    "@midwayjs/decorator": "^2.10.18",
+    "@midwayjs/logger": "^2.10.18",
+    "@midwayjs/socketio": "^2.10.18",
+    "@midwayjs/web": "^2.10.19",
     "@typegoose/typegoose": "^7.6.0",
     "egg": "^2.29.4",
     "egg-cors": "^2.2.3",
@@ -37,7 +37,7 @@
     "@midwayjs/cli": "^1.2.68",
     "@midwayjs/egg-ts-helper": "^1.2.0",
     "@midwayjs/luckyeye": "^1.0.2",
-    "@midwayjs/mock": "^2.10.15",
+    "@midwayjs/mock": "^2.10.18",
     "@types/ioredis": "^4.26.4",
     "@types/jest": "^26.0.23",
     "@types/jsonwebtoken": "^8.5.1",
@@ -53,8 +53,8 @@
     "mwts": "^1.2.2",
     "prettier": "^2.3.0",
     "socket.io-client": "^4.1.2",
-    "ts-jest": "^27.0.0",
-    "typescript": "^4.2.4"
+    "ts-jest": "^27.0.1",
+    "typescript": "^4.3.2"
   },
   "midway-bin-clean": [
     ".vscode/.tsbuildinfo",

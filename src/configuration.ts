@@ -1,22 +1,30 @@
 import { join } from 'path';
 import { readdirSync } from 'fs';
 
-import { Configuration } from '@midwayjs/decorator';
+import { Config, Configuration } from '@midwayjs/decorator';
 import { ILifeCycle, IMidwayContainer } from '@midwayjs/core';
 import { getModelForClass } from '@typegoose/typegoose';
-
-import Mongodb from './core/mongodb';
+import { Connection, createConnection } from 'mongoose';
 @Configuration({ importConfigs: [join(__dirname, './config')], conflictCheck: true })
 export class ContainerLifeCycle implements ILifeCycle {
+  @Config('mongodb.clients') private mongodbClientsConfig;
+  async registerMongodb(container: IMidwayContainer): Promise<void> {
+    for (const connectionName in this.mongodbClientsConfig) {
+      const { uri, options } = this.mongodbClientsConfig[connectionName];
+      const connection: Connection = createConnection(uri, options);
+      connection.on('connected', async () => {
+        readdirSync(join(__dirname, './model')).forEach(async name => {
+          const uninitializedClass = require(`./model/${name}`);
+          const identifier = `${uninitializedClass.default.name.toString().toLowerCase()}Model`;
+          const target = getModelForClass(uninitializedClass.default, { existingConnection: connection });
+          if (uninitializedClass.default.connectionName === connectionName || (!uninitializedClass.default.connectionName && connectionName === 'main')) {
+            container.registerObject(identifier, target);
+          }
+        });
+      });
+    }
+  }
   async onReady(container: IMidwayContainer) {
-    readdirSync(join(__dirname, './model')).forEach(async name => {
-      const uninitializedClass = require(`./model/${name}`);
-      for (const key in uninitializedClass) {
-        const mongodb = await container.getAsync<Mongodb>('mongodb');
-        const mainConnection = mongodb.getConnection('main');
-        const model = getModelForClass(uninitializedClass[key], { existingConnection: mainConnection });
-        container.registerObject(`${key.toLowerCase()}Model`, model);
-      }
-    });
+    await this.registerMongodb(container);
   }
 }
