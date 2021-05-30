@@ -1,7 +1,7 @@
 import { ModelOptions, prop, ReturnModelType } from '@typegoose/typegoose';
 
-import { ConnectionName } from '../decorator/connection_name';
-@ConnectionName('main')
+import { MongodbConnection } from '../decorator/mongodb_connection';
+@MongodbConnection('main')
 @ModelOptions({ schemaOptions: { collection: 'user', timestamps: true } })
 export class User {
   @prop({ required: true, unique: true }) phone: string;

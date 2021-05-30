@@ -1,7 +1,7 @@
 import { ModelOptions, prop, ReturnModelType } from '@typegoose/typegoose';
 
-import { ConnectionName } from '../decorator/connection_name';
-@ConnectionName('log')
+import { MongodbConnection } from '../decorator/mongodb_connection';
+@MongodbConnection('log')
 @ModelOptions({ schemaOptions: { collection: 'report', timestamps: true } })
 export class Report {
   @prop({ required: true }) ip: string;

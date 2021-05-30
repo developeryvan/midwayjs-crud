@@ -14,10 +14,10 @@ export class ContainerLifeCycle implements ILifeCycle {
       const { uri, options } = this.mongodbClientsConfig[connectionName];
       const connection: Connection = createConnection(uri, options);
       connection.on('connected', async () => {
-        const CONNECTION_NAME_KEY = 'connectionNameKey';
-        const modules = listModule(CONNECTION_NAME_KEY);
+        const MONGODB_CONNECTION_KEY = 'mongodb_connection_key';
+        const modules = listModule(MONGODB_CONNECTION_KEY);
         for (const module of modules) {
-          const data = getClassMetadata(CONNECTION_NAME_KEY, module);
+          const data = getClassMetadata(MONGODB_CONNECTION_KEY, module);
           const identifier = `${module.name.toLowerCase()}Model`;
           const target = getModelForClass(module, { existingConnection: connection });
           if (data.connectionName === connectionName) container.registerObject(identifier, target);
