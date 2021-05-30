@@ -1,6 +1,6 @@
 import { Inject } from '@midwayjs/decorator';
 import { IMidwayWebContext } from '@midwayjs/web';
-export default class BaseController {
+export class BaseController {
   @Inject() protected ctx: IMidwayWebContext;
   protected success(content?) {
     const { ctx } = this;

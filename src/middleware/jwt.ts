@@ -14,13 +14,9 @@ export class JwtMiddleware implements IWebMiddleware {
         await next();
       } else {
         const [, token] = ctx.header.authorization?.trim().split(' ') || ['', ''];
-        if (!token) {
-          throw { message: 'invalid authorization' };
-        }
+        if (!token) throw { message: 'invalid authorization' };
         const isRevoked = await this.jwt.checkRevoked(token);
-        if (isRevoked) {
-          throw { message: 'invalid token' };
-        }
+        if (isRevoked) throw { message: 'invalid token' };
         const decodedToken = this.jwt.verify(token);
         ctx.state.token = token;
         ctx.state.user = decodedToken.payload;

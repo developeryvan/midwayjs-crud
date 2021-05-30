@@ -1,6 +1,6 @@
 import { AnyParamConstructor, DocumentType, ReturnModelType } from '@typegoose/typegoose/lib/types';
 import { FilterQuery, ModelUpdateOptions, QueryFindOptions, UpdateQuery } from 'mongoose';
-export default class BaseService<T> {
+export class BaseService<T> {
   protected model: ReturnModelType<AnyParamConstructor<T>>;
   async findAll(filter: FilterQuery<DocumentType<T>>, projection?, options?: QueryFindOptions): Promise<DocumentType<T>[]> {
     const models = await this.model.find(filter, projection, options);

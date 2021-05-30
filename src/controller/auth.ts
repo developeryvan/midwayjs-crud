@@ -1,6 +1,6 @@
 import { ALL, Body, Controller, Get, Inject, Post, Provide } from '@midwayjs/decorator';
 
-import BaseController from '../core/base_controller';
+import { BaseController } from '../core/base_controller';
 import { UserService } from '../service/user';
 @Provide()
 @Controller('/auth')
