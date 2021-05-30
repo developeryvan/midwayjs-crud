@@ -7,7 +7,7 @@ import { UserService } from '../service/user';
 export class UserController extends BaseController {
   @Inject() userService: UserService;
   @Get('/') async index(@Query(ALL) query) {
-    const result = await this.userService.findAll(query);
+    const result = await this.userService.findAllWithPaginate(query);
     this.success(result);
   }
   @Get('/:id') async show(@Param() id: string) {

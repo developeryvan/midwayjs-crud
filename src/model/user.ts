@@ -1,8 +1,11 @@
-import { ModelOptions, prop, ReturnModelType } from '@typegoose/typegoose';
+import { ModelOptions, plugin, prop, ReturnModelType, DocumentType } from '@typegoose/typegoose';
+import { PaginateModel } from 'mongoose';
+import * as mongoosePaginate from 'mongoose-paginate-v2';
 
 import { MongodbConnection } from '../decorator/mongodb_connection';
 @MongodbConnection('main')
 @ModelOptions({ schemaOptions: { collection: 'user', timestamps: true } })
+@plugin(mongoosePaginate)
 export class User {
   @prop({ required: true, unique: true }) phone: string;
   @prop({ required: true, unique: true }) username: string;
@@ -12,4 +15,4 @@ export class User {
   @prop({ default: 'user' }) roles: string;
   @prop({ default: -1 }) status: number;
 }
-export type UserModel = ReturnModelType<typeof User>;
+export type UserModel = PaginateModel<DocumentType<User>> & ReturnModelType<typeof User>;

@@ -1,7 +1,11 @@
 import { AnyParamConstructor, DocumentType, ReturnModelType } from '@typegoose/typegoose/lib/types';
-import { FilterQuery, ModelUpdateOptions, QueryFindOptions, UpdateQuery } from 'mongoose';
+import { PaginateModel, FilterQuery, ModelUpdateOptions, QueryFindOptions, PaginateOptions, PaginateResult, UpdateQuery } from 'mongoose';
 export class BaseService<T> {
-  protected model: ReturnModelType<AnyParamConstructor<T>>;
+  protected model: PaginateModel<DocumentType<T>> & ReturnModelType<AnyParamConstructor<T>>;
+  async findAllWithPaginate(filter: FilterQuery<DocumentType<T>>, options?: PaginateOptions): Promise<PaginateResult<DocumentType<T>>> {
+    const models = await this.model.paginate(filter, options);
+    return models;
+  }
   async findAll(filter: FilterQuery<DocumentType<T>>, projection?, options?: QueryFindOptions): Promise<DocumentType<T>[]> {
     const models = await this.model.find(filter, projection, options);
     return models;
