@@ -14,4 +14,3 @@ run/
 .tsbuildinfo
 .tsbuildinfo.*
 typings
-config.local.ts

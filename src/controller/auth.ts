@@ -16,7 +16,7 @@ export class AuthController extends BaseController {
     this.success(result);
   }
   @Post('/logout') async logout(@Body() token) {
-    !token && (token = this.ctx.state.token);
+    if (!token) token = this.ctx.state.token;
     const result = await this.userService.logout(token);
     this.success(result);
   }

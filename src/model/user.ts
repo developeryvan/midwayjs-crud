@@ -3,7 +3,7 @@ import { PaginateModel } from 'mongoose';
 import * as mongoosePaginate from 'mongoose-paginate-v2';
 
 import { MongodbConnection } from '../decorator/mongodb_connection';
-@MongodbConnection('main')
+@MongodbConnection('default')
 @ModelOptions({ schemaOptions: { collection: 'user', timestamps: true } })
 @plugin(mongoosePaginate)
 export class User {

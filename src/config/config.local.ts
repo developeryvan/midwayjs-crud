@@ -7,6 +7,6 @@ const config = {
     dataId: 'midwayjs.json',
     group: 'DEFAULT_GROUP',
   },
-  env: process.env.env || 'prod',
+  env: process.env.env || 'local',
 };
 export default config;
