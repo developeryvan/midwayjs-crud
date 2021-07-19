@@ -1,5 +1,4 @@
 import { Inject, Provide } from '@midwayjs/decorator';
-
 import { BaseService } from '../core/base_service';
 import { User, UserModel } from '../model/user';
 import { Crypto } from '../util/crypto';

@@ -1,7 +1,6 @@
 import { ModelOptions, plugin, prop, ReturnModelType, DocumentType } from '@typegoose/typegoose';
 import { PaginateModel } from 'mongoose';
 import * as mongoosePaginate from 'mongoose-paginate-v2';
-
 import { MongodbConnection } from '../decorator/mongodb_connection';
 @MongodbConnection('default')
 @ModelOptions({ schemaOptions: { collection: 'user', timestamps: true } })

@@ -7,18 +7,13 @@ import * as IORedis from 'ioredis';
 export class Redis {
   private clients: { [name: string]: IORedis.Redis } = {};
   @Config('redis.clients') private clientsConfig;
-  @Logger() logger: ILogger;
-  @Init() protected async init(): Promise<void> {
+  @Logger() private logger: ILogger;
+  @Init()
+  protected async init(): Promise<void> {
     for (const key in this.clientsConfig) {
       const config = this.clientsConfig[key];
       const connection = new IORedis(config);
-      connection
-        .once('connect', () => {
-          this.logger.info(`redis (${key}) connected successfully`);
-        })
-        .on('error', error => {
-          this.logger.error(error);
-        });
+      connection.once('connect', () => this.logger.info(`redis (${key}) connected successfully`)).on('error', error => this.logger.error(error));
       this.clients[key] = connection;
     }
   }

@@ -1,6 +1,5 @@
 import { Config, Inject, Provide } from '@midwayjs/decorator';
 import { IWebMiddleware, IMidwayWebContext, IMidwayWebNext } from '@midwayjs/web';
-
 import { PathToRegexp } from '../util/path_to_regexp';
 import { Jwt } from '../util/jwt';
 @Provide()

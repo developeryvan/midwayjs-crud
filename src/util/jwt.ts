@@ -1,6 +1,5 @@
 import { Config, Inject, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
 import * as jwt from 'jsonwebtoken';
-
 import { Lock } from './lock';
 import { Crypto } from './crypto';
 @Scope(ScopeEnum.Singleton)

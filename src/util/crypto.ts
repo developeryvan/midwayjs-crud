@@ -1,5 +1,4 @@
 import * as crypto from 'crypto';
-
 import { Config, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
 @Scope(ScopeEnum.Singleton)
 @Provide()

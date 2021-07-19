@@ -1,6 +1,5 @@
 import { Provide } from '@midwayjs/decorator';
 import { IWebMiddleware, IMidwayWebContext, IMidwayWebNext } from '@midwayjs/web';
-
 import { ReportService } from '../service/report';
 @Provide()
 export class ReportMiddleware implements IWebMiddleware {

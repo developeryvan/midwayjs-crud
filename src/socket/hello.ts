@@ -4,7 +4,8 @@ import { Context } from '@midwayjs/socketio';
 @WSController('/')
 export class HelloSocketController {
   @Inject() ctx: Context;
-  @OnWSConnection() async onConnectionMethod() {
+  @OnWSConnection()
+  async onConnectionMethod() {
     console.log('on client connect', this.ctx.id);
   }
   @OnWSMessage('greet') @WSEmit('greetResult') async gotMessage(data1, data2, data3) {

@@ -1,5 +1,4 @@
 import { Inject, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
-
 import { Redis } from '../core/redis';
 @Scope(ScopeEnum.Singleton)
 @Provide()

@@ -1,5 +1,4 @@
 import { join } from 'path';
-
 import { App, Config, Configuration, getClassMetadata, listModule, Logger, MidwayFrameworkType } from '@midwayjs/decorator';
 import { ILifeCycle, IMidwayContainer } from '@midwayjs/core';
 import { Application as SocketApplication } from '@midwayjs/socketio';

@@ -6,7 +6,8 @@ import { NacosConfigClient } from 'nacos';
 export class RemoteConfig {
   @Config('nacosClient') private nacosConfig;
   @App() private app: IMidwayApplication;
-  @Init() protected async init(): Promise<void> {
+  @Init()
+  protected async init(): Promise<void> {
     const { dataId, group } = this.nacosConfig;
     const nacosClient = new NacosConfigClient(this.nacosConfig);
     await nacosClient.ready();

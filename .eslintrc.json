@@ -1,40 +1,17 @@
 {
   "env": { "jest": true },
-  "extends": "./node_modules/mwts/",
-  "plugins": ["unicorn", "import"],
+  "extends": ["./node_modules/mwts/"],
+  "plugins": ["import", "unicorn", "decorator-position"],
   "rules": {
-    "prettier/prettier": [
-      "error",
-      {
-        "arrowParens": "avoid",
-        "bracketSpacing": true,
-        "endOfLine": "lf",
-        "printWidth": 180,
-        "proseWrap": "never",
-        "quoteProps": "consistent",
-        "semi": true,
-        "singleQuote": true,
-        "tabWidth": 2,
-        "trailingComma": "es5",
-        "useTabs": false
-      }
-    ],
-    "@typescript-eslint/no-explicit-any": 1,
-    "camelcase": 2,
+    "@typescript-eslint/no-explicit-any": 0,
     "eqeqeq": [2, "always"],
-    "no-multiple-empty-lines": [2, { "max": 1 }],
+    "no-multiple-empty-lines": [2, { "max": 0 }],
     "object-shorthand": 2,
     "quote-props": [2, "consistent"],
     "space-before-function-paren": [2, { "anonymous": "always", "named": "never", "asyncArrow": "always" }],
+    "import/order": [2, { "newlines-between": "never" }],
     "unicorn/filename-case": [2, { "case": "snakeCase" }],
-    "import/order": [
-      2,
-      {
-        "groups": ["builtin", "external", "internal", "parent", "sibling", "index", "unknown", "object"],
-        "pathGroupsExcludedImportTypes": ["builtin"],
-        "newlines-between": "always"
-      }
-    ]
+    "decorator-position/decorator-position": ["error", { "printWidth": 180, "properties": "prefer-inline", "methods": "above" }]
   },
   "ignorePatterns": ["node_modules", "dist", "test", "jest.config.js", "typings"]
 }
