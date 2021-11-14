@@ -28,6 +28,8 @@ npm run dev
 open http://localhost:7001/
 ```
 
+[swagger 查看所有接口](http://127.0.0.1:7001/swagger-ui/index.html)
+
 ###### 部署
 
 如需进一步了解，参见[midway 部署文档](https://www.yuque.com/midwayjs/midway_v2/deployment 'midway部署文档')
