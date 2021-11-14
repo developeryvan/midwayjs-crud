@@ -1,12 +1,12 @@
 const config = {
-  nacosClient: {
-    serverAddr: '120.76.173.175:8848',
-    username: 'midwayjs',
-    password: '12345678',
-    namespace: '76556b0e-9ac3-4d24-98ae-64100cb3f09e',
-    dataId: 'midwayjs.json',
-    group: 'DEFAULT_GROUP',
-  },
   env: process.env.env || 'local',
+  nacosClient: { serverAddr: 'localhost:8848', username: 'nacos', password: '123456', namespace: 'public', dataId: 'local.json', group: 'DEFAULT_GROUP' },
+  // redis: { clients: { session: { host: 'localhost', port: 6379, password: '', db: 1 }, cache: { host: 'localhost', port: 6379, password: '', db: 2 } } },
+  // mongoose: {
+  //   clients: {
+  //     default: { uri: 'mongodb://test:123456@localhost/test', options: { useNewUrlParser: true, useUnifiedTopology: true } },
+  //     log: { uri: 'mongodb://test:123456@localhost/test', options: { useNewUrlParser: true, useUnifiedTopology: true } },
+  //   },
+  // },
 };
 export default config;

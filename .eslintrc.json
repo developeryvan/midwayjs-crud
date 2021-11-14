@@ -1,17 +1,45 @@
 {
+  "root": true,
   "env": { "jest": true },
   "extends": ["./node_modules/mwts/"],
+  "ignorePatterns": ["node_modules", "dist", "test", "jest.config.js", "typings", "src/util/sdk"],
+  "parserOptions": { "project": "./tsconfig.json" },
   "plugins": ["import", "unicorn", "decorator-position"],
   "rules": {
-    "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/array-type": 2,
+    "@typescript-eslint/consistent-indexed-object-style": 2,
+    "@typescript-eslint/consistent-type-imports": [2, { "prefer": "no-type-imports" }],
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/explicit-member-accessibility": 2,
+    "@typescript-eslint/explicit-module-boundary-types": 0,
+    "@typescript-eslint/method-signature-style": 2,
+    "@typescript-eslint/no-confusing-void-expression": 2,
+    "@typescript-eslint/no-empty-function": 2,
+    "@typescript-eslint/no-explicit-any": 2,
+    "@typescript-eslint/no-non-null-asserted-optional-chain": 2,
+    "@typescript-eslint/no-non-null-assertion": 2,
+    "@typescript-eslint/no-use-before-define": 2,
+    "@typescript-eslint/prefer-readonly": 2,
     "eqeqeq": [2, "always"],
+    "no-dupe-class-members": 2,
     "no-multiple-empty-lines": [2, { "max": 0 }],
+    "node/no-missing-require": 2,
+    "node/no-unpublished-import": 2,
+    "node/shebang": 2,
     "object-shorthand": 2,
     "quote-props": [2, "consistent"],
     "space-before-function-paren": [2, { "anonymous": "always", "named": "never", "asyncArrow": "always" }],
-    "import/order": [2, { "newlines-between": "never" }],
+    "decorator-position/decorator-position": [2, { "printWidth": 180, "properties": "prefer-inline", "methods": "above" }],
     "unicorn/filename-case": [2, { "case": "snakeCase" }],
-    "decorator-position/decorator-position": ["error", { "printWidth": 180, "properties": "prefer-inline", "methods": "above" }]
-  },
-  "ignorePatterns": ["node_modules", "dist", "test", "jest.config.js", "typings"]
+    "import/no-duplicates": 2,
+    "import/order": [
+      2,
+      {
+        "alphabetize": { "order": "asc" },
+        "groups": ["builtin", "external", "internal", "parent", "sibling", "index", "object", "type", "unknown"],
+        "newlines-between": "never",
+        "warnOnUnassignedImports": true
+      }
+    ]
+  }
 }

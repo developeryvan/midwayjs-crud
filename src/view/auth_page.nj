@@ -1,0 +1,12 @@
+<html>
+  <head>
+    <title>跳转中...</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      window.onload = function () {
+        window.location.href = '{{authUrl}}'.replace(/&amp;/g, '&');
+      };
+    </script>
+  </body>
+</html>

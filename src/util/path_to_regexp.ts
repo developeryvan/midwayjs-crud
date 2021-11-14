@@ -3,7 +3,7 @@ import { pathToRegexp } from 'path-to-regexp';
 @Scope(ScopeEnum.Singleton)
 @Provide()
 export class PathToRegexp {
-  pathMatch(pattern: string | RegExp | Array<string | RegExp>, path: string, isReturnTrue: boolean): boolean {
+  public pathMatch(pattern: string | RegExp | (string | RegExp)[], path: string, isReturnTrue: boolean): boolean {
     if (typeof pattern === 'string') {
       const reg = pathToRegexp(pattern, [], { end: false });
       if (reg.global) reg.lastIndex = 0;

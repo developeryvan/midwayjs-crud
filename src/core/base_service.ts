@@ -1,43 +1,27 @@
-import { AnyParamConstructor, DocumentType, ReturnModelType } from '@typegoose/typegoose/lib/types';
-import {
-  CreateQuery,
-  FilterQuery,
-  PaginateModel,
-  PaginateOptions,
-  PaginateResult,
-  QueryFindBaseOptions,
-  QueryFindOneAndUpdateOptions,
-  QueryFindOptions,
-  UpdateQuery,
-} from 'mongoose';
+import { DocumentType } from '@typegoose/typegoose/lib/types';
+import { FilterQuery, QueryOptions, UpdateQuery } from 'mongoose';
+import { BaseModel, PaginateOptions, PaginateResult } from './base_model';
 export class BaseService<T> {
-  protected model: PaginateModel<DocumentType<T>> & ReturnModelType<AnyParamConstructor<T>>;
-  async findAllWithPaginate(filter: FilterQuery<DocumentType<T>>, options?: PaginateOptions): Promise<PaginateResult<DocumentType<T>>> {
-    const models = await this.model.paginate(filter, options);
-    return models;
+  protected model: BaseModel<DocumentType<T>>;
+  public async findAllWithPaginate(filter: FilterQuery<DocumentType<T>>, options?: PaginateOptions): Promise<PaginateResult<DocumentType<T>>> {
+    return this.model.paginate(filter, options);
   }
-  async findAll(filter: FilterQuery<DocumentType<T>>, projection?, options?: QueryFindOptions): Promise<DocumentType<T>[]> {
-    const models = await this.model.find(filter, projection, options);
-    return models;
+  public async findAll(filter: FilterQuery<DocumentType<T>>, projection?, options?: QueryOptions): Promise<DocumentType<T>[]> {
+    return this.model.find(filter, projection, options);
   }
-  async findOne(filter: FilterQuery<DocumentType<T>>, projection?, options?: QueryFindBaseOptions): Promise<DocumentType<T>> {
-    const model = await this.model.findOne(filter, projection, options);
-    return model;
+  public async findOne(filter: FilterQuery<DocumentType<T>>, projection?, options?: QueryOptions): Promise<DocumentType<T>> {
+    return this.model.findOne(filter, projection, options);
   }
-  async findById(id: string, projection?, options?: QueryFindBaseOptions): Promise<DocumentType<T>> {
-    const model = await this.model.findById(id, projection, options);
-    return model;
+  public async findById(id: string, projection?, options?: QueryOptions): Promise<DocumentType<T>> {
+    return this.model.findById(id, projection, options);
   }
-  async create(data: CreateQuery<DocumentType<T>>): Promise<DocumentType<T>> {
-    const model = await this.model.create(data);
-    return model;
+  public async create(data: T): Promise<DocumentType<T>> {
+    return this.model.create(data);
   }
-  async updateById(id: string, update: UpdateQuery<DocumentType<T>>, options?: QueryFindOneAndUpdateOptions): Promise<DocumentType<T>> {
-    const model = await this.model.findByIdAndUpdate(id, update, { new: true, ...options });
-    return model;
+  public async updateById(id: string, update: UpdateQuery<DocumentType<T>>, options?: QueryOptions): Promise<DocumentType<T>> {
+    return this.model.findByIdAndUpdate(id, update, { new: true, ...options });
   }
-  async deleteById(id: string): Promise<DocumentType<T>> {
-    const model = await this.model.findByIdAndRemove(id);
-    return model;
+  public async deleteById(id: string): Promise<DocumentType<T>> {
+    return this.model.findByIdAndRemove(id);
   }
 }

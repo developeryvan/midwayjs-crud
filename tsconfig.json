@@ -11,7 +11,7 @@
     "noUnusedLocals": true,
     "outDir": "dist",
     "pretty": true,
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "stripInternal": true,
     "target": "ES2018",
     "typeRoots": ["./typings", "./node_modules/@types"]

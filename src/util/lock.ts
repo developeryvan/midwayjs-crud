@@ -1,17 +1,17 @@
 import { Inject, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
-import { Redis } from '../core/redis';
+import { RedisServiceFactory } from '@midwayjs/redis';
 @Scope(ScopeEnum.Singleton)
 @Provide()
 export class Lock {
-  @Inject() redis: Redis;
-  async lock(key: string, timeout = 120) {
-    await this.redis.getConnection('cache').set(key, 1, 'EX', timeout);
-  }
-  async unlock(key: string) {
-    await this.redis.getConnection('cache').del(key);
-  }
-  async checkLock(key: string) {
-    const result = await this.redis.getConnection('cache').get(key);
+  @Inject() private readonly redisServiceFactory: RedisServiceFactory;
+  public async checkLock(key: string) {
+    const result = await this.redisServiceFactory.get('cache').get(key);
     return !!result;
+  }
+  public async lock(key: string, timeout = 120) {
+    await this.redisServiceFactory.get('cache').set(key, 1, 'EX', timeout);
+  }
+  public async unlock(key: string) {
+    await this.redisServiceFactory.get('cache').del(key);
   }
 }

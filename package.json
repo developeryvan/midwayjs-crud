@@ -1,13 +1,13 @@
 {
   "name": "midwayjs-crud",
-  "version": "2.1.1",
+  "version": "3.1.1",
   "private": true,
   "description": "",
   "author": "Yvan",
-  "license": "MIT",
   "scripts": {
     "start": "NODE_ENV=production node ./bootstrap.js",
     "dev": "cross-env ets && cross-env NODE_ENV=local midway-bin dev --ts --entryFile=bootstrap.js --fast",
+    "deploy": "midway-bin deploy",
     "test": "midway-bin test --ts --runInBand",
     "cov": "midway-bin cov --ts",
     "lint": "mwts check",
@@ -17,47 +17,67 @@
     "check": "luckyeye"
   },
   "dependencies": {
-    "@midwayjs/bootstrap": "^2.10.18",
-    "@midwayjs/core": "^2.10.18",
-    "@midwayjs/decorator": "^2.10.18",
-    "@midwayjs/logger": "^2.10.18",
-    "@midwayjs/socketio": "^2.10.18",
-    "@midwayjs/web": "^2.10.19",
-    "@typegoose/typegoose": "^7.6.0",
-    "egg": "^2.29.4",
+    "@casbin/redis-watcher": "^1.0.1",
+    "@midwayjs/axios": "^2.13.4",
+    "@midwayjs/bootstrap": "^2.13.4",
+    "@midwayjs/core": "^2.13.4",
+    "@midwayjs/decorator": "^2.13.2",
+    "@midwayjs/logger": "^2.13.0",
+    "@midwayjs/redis": "^2.13.4",
+    "@midwayjs/swagger": "^1.3.0",
+    "@midwayjs/task": "^2.13.4",
+    "@midwayjs/typegoose": "^2.13.5",
+    "@midwayjs/view-nunjucks": "^2.13.4",
+    "@midwayjs/web": "^2.13.4",
+    "@typegoose/typegoose": "^9.2.0",
+    "@wecom/crypto": "^1.0.0",
+    "casbin": "^5.11.5",
+    "casbin-mongoose-adapter": "^3.1.1",
+    "dayjs": "^1.10.7",
+    "egg": "^2.31.0",
     "egg-cors": "^2.2.3",
-    "ioredis": "^4.27.3",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "5.10.18",
-    "mongoose-paginate-v2": "^1.3.18",
-    "nacos": "^2.1.1",
+    "mongoose": "^6.0.12",
+    "mongoose-paginate-v2": "^1.4.2",
+    "nacos": "^2.2.0",
     "path-to-regexp": "^6.2.0",
-    "request": "^2.88.2"
+    "xml2js": "^0.4.23"
   },
   "devDependencies": {
-    "@midwayjs/cli": "^1.2.68",
-    "@midwayjs/egg-ts-helper": "^1.2.0",
+    "@midwayjs/cli": "^1.2.85",
+    "@midwayjs/egg-ts-helper": "^1.2.1",
     "@midwayjs/luckyeye": "^1.0.2",
-    "@midwayjs/mock": "^2.10.18",
-    "@types/ioredis": "^4.26.4",
-    "@types/jest": "^26.0.23",
-    "@types/jsonwebtoken": "^8.5.1",
-    "@types/mongoose": "^5.10.5",
-    "@types/mongoose-paginate-v2": "^1.3.9",
-    "@types/node": "15",
-    "@types/request": "^2.48.5",
-    "@types/socket.io-client": "^1.4.36",
+    "@midwayjs/mock": "^2.13.4",
+    "@types/ioredis": "^4.27.8",
+    "@types/jest": "^27.0.2",
+    "@types/jsonwebtoken": "^8.5.5",
+    "@types/node": "16",
+    "@types/request": "^2.48.7",
+    "@types/xml2js": "^0.4.9",
+    "@typescript-eslint/eslint-plugin": "^5.2.0",
+    "@typescript-eslint/parser": "^5.2.0",
     "cross-env": "^7.0.3",
-    "eslint": "^7.27.0",
-    "eslint-plugin-decorator-position": "^2.2.28",
-    "eslint-plugin-import": "^2.23.3",
-    "eslint-plugin-unicorn": "^32.0.1",
-    "jest": "^27.0.1",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-decorator-position": "^2.2.29",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-unicorn": "^37.0.1",
+    "jest": "^27.3.1",
     "mwts": "^1.2.2",
-    "prettier": "^2.3.0",
-    "socket.io-client": "^4.1.2",
-    "ts-jest": "^27.0.1",
-    "typescript": "^4.3.2"
+    "prettier": "^2.4.1",
+    "swagger-ui-dist": "^4.1.0",
+    "ts-jest": "^27.0.7",
+    "typescript": "^4.4.4"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "midway-integration": {
+    "lifecycle": {
+      "before:package:cleanup": "npm run build"
+    }
   },
   "midway-bin-clean": [
     ".vscode/.tsbuildinfo",
@@ -67,5 +87,8 @@
     "packages": [
       "midway_v2"
     ]
+  },
+  "egg": {
+    "framework": "@midwayjs/web"
   }
 }
