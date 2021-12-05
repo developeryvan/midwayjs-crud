@@ -13,7 +13,7 @@
     "pretty": true,
     "skipLibCheck": true,
     "stripInternal": true,
-    "target": "ES2018",
+    "target": "es2018",
     "typeRoots": ["./typings", "./node_modules/@types"]
   },
   "exclude": ["dist", "node_modules", "test"]
