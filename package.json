@@ -16,6 +16,7 @@
     "@midwayjs/swagger": "beta",
     "@midwayjs/task": "beta",
     "@midwayjs/typegoose": "beta",
+    "@midwayjs/validate": "beta",
     "@midwayjs/view-nunjucks": "beta",
     "@typegoose/typegoose": "^9.2.0",
     "@wecom/crypto": "^1.0.0",
