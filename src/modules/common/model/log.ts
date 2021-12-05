@@ -6,9 +6,9 @@ import { BaseModel } from '../../../core/base_model';
 @plugin(mongoosePaginate)
 @ModelOptions({ schemaOptions: { collection: 'log', timestamps: true } })
 export class Log {
-  @prop({ default: 'info' }) public type: string;
-  @prop({ required: true }) public key: string;
-  @prop() public description: string;
   @prop() public content: unknown;
+  @prop() public description: string;
+  @prop({ required: true }) public key: string;
+  @prop({ default: 'info' }) public type: string;
 }
 export type LogModel = BaseModel<DocumentType<Log>>;

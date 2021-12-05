@@ -5,7 +5,7 @@
   <body>
     <script type="text/javascript">
       window.onload = function () {
-        window.location.href = '{{authUrl}}'.replace(/&amp;/g, '&');
+        window.location.href = '{{url}}'.replace(/&amp;/g, '&');
       };
     </script>
   </body>

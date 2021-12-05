@@ -1,4 +1,0 @@
-service: cps
-provider:
-  name: aliyun
-deployType: egg
