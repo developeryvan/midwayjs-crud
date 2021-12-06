@@ -23,12 +23,10 @@ setGlobalOptions({ options: { allowMixed: Severity.ALLOW } });
 export class ContainerLifeCycle {
   @App() private readonly app: Koa.Application;
   @Inject() private readonly nacos: Nacos;
-
   public async onConfigLoad() {
     const data = this.nacos.getConfig();
     return { data };
   }
-
   public async onReady() {
     this.app.useMiddleware(cors({ origin: '*' }));
     this.app.useMiddleware(bodyParser({ enableTypes: ['json', 'form', 'text', 'xml'] }));

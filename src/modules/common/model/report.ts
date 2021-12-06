@@ -6,11 +6,11 @@ import { BaseModel } from '../../../core/base_model';
 @plugin(mongoosePaginate)
 @ModelOptions({ schemaOptions: { collection: 'report', timestamps: true } })
 export class Report {
-  @prop() public body: string;
+  @prop({ required: true }) public url: string;
   @prop({ required: true }) public ip: string;
   @prop({ required: true }) public method: string;
+  @prop() public body: string;
   @prop() public response: string;
   @prop() public responseTime: number;
-  @prop({ required: true }) public url: string;
 }
 export type ReportModel = BaseModel<DocumentType<Report>>;

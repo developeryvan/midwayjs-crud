@@ -1,8 +1,6 @@
-import { Controller, Get, Provide } from '@midwayjs/decorator';
+import { Controller, Get } from '@midwayjs/decorator';
 import { BaseController } from '../../../core/base_controller';
-
-@Provide()
-@Controller('/')
+@Controller('/home')
 export class HomeController extends BaseController {
   @Get('/')
   public async render() {

@@ -1,7 +1,5 @@
 # 基于 Typescript+MidwayJs+Nacos 的微服务开发架构
 
-有点 MidwayJs 的味道,有点 EggJs 的味道,有点自己的味道。未来可能会增加配套的前端后台管理仓库，看有没有时间吧。
-
 ##特性
 
 - 【体验佳】 智能化的代码提示和编译时的代码检查机制
@@ -10,7 +8,6 @@
 
 ##技术栈
 
-- nodejs/eggjs [文档](https://eggjs.org/zh-cn/intro/index.html 'eggjs')
 - typescript/midwayjs [文档](https://www.yuque.com/midwayjs/midway_v2 'midwayjs')
 - mongodb/typegoose [文档](https://typegoose.github.io/typegoose/ 'typegoose')
 - mongodb/mongoosejs [文档](https://mongoosejs.com/docs/guide.html 'mongoosejs')

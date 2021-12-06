@@ -22,7 +22,7 @@
     "@typescript-eslint/prefer-readonly": 2,
     "eqeqeq": [2, "always"],
     "no-dupe-class-members": 2,
-    "no-multiple-empty-lines": [2, { "max": 1 }],
+    "no-multiple-empty-lines": [2, { "max": 0 }],
     "object-shorthand": 2,
     "quote-props": [2, "consistent"],
     "space-before-function-paren": [2, { "anonymous": "always", "named": "never", "asyncArrow": "always" }],

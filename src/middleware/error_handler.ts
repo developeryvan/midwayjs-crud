@@ -1,11 +1,10 @@
 import { Provide } from '@midwayjs/decorator';
-import { IMidwayKoaContext, IMidwayKoaNext, IWebMiddleware } from '@midwayjs/koa';
+import { Context, IMidwayKoaNext, IWebMiddleware } from '@midwayjs/koa';
 import { LogService } from '../modules/common/service/log';
-
 @Provide()
 export class ErrorHandlerMiddleware implements IWebMiddleware {
   public resolve() {
-    return async (ctx: IMidwayKoaContext, next: IMidwayKoaNext): Promise<void> => {
+    return async (ctx: Context, next: IMidwayKoaNext): Promise<void> => {
       try {
         await next();
         if (ctx.status === 404) ctx.body = { header: { status: 404, message: 'not found' } };

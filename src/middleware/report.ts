@@ -1,10 +1,10 @@
 import { Provide } from '@midwayjs/decorator';
-import { IMidwayKoaContext, IMidwayKoaNext, IWebMiddleware } from '@midwayjs/koa';
+import { Context, IMidwayKoaNext, IWebMiddleware } from '@midwayjs/koa';
 import { ReportService } from '../modules/common/service/report';
 @Provide()
 export class ReportMiddleware implements IWebMiddleware {
   public resolve() {
-    return async (ctx: IMidwayKoaContext, next: IMidwayKoaNext): Promise<void> => {
+    return async (ctx: Context, next: IMidwayKoaNext): Promise<void> => {
       const startTime = Date.now();
       const { ip, url } = ctx;
       const { method, body } = ctx.request;

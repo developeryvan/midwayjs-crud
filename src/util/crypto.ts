@@ -4,7 +4,6 @@ import { Config, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
 @Provide()
 export class Crypto {
   @Config('cipherKey') private readonly cipherKey: string;
-
   public decrypt(str: string, cipherKey?: string): string {
     const key = cipherKey || this.cipherKey || Buffer.alloc(16, 0);
     const iv = Buffer.alloc(16, 0);
@@ -13,7 +12,6 @@ export class Crypto {
     decrypted += decipher.final('utf8');
     return decrypted;
   }
-
   public decryptMiniprogramData(encrypt: string, key: string, iv: string): string {
     const decipher = crypto.createDecipheriv('aes-128-cbc', Buffer.from(key, 'base64'), Buffer.from(iv, 'base64'));
     decipher.setAutoPadding(true);
@@ -21,7 +19,6 @@ export class Crypto {
     decoded += decipher.final('utf8');
     return decoded;
   }
-
   public encrypt(str: string, cipherKey?: string): string {
     const key = cipherKey || this.cipherKey || Buffer.alloc(16, 0);
     const iv = Buffer.alloc(16, 0);
@@ -30,7 +27,6 @@ export class Crypto {
     encrypted += cipher.final('hex');
     return encrypted;
   }
-
   public md5(str: string): string {
     return crypto.createHash('md5').update(str).digest('hex');
   }

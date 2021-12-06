@@ -6,10 +6,9 @@ import { NacosConfigClient } from 'nacos';
 export class Nacos {
   @App() private readonly app: IMidwayApplication;
   @Config('nacosClient') private readonly nacosClientConfig;
-
   private config;
-
-  @Init() public async init(): Promise<void> {
+  @Init()
+  public async init(): Promise<void> {
     const { dataId, group } = this.nacosClientConfig;
     const nacosClient = new NacosConfigClient(this.nacosClientConfig);
     await nacosClient.ready();
@@ -17,7 +16,6 @@ export class Nacos {
     this.config = configStr ? JSON.parse(configStr) : {};
     this.app.addConfigObject(this.config);
   }
-
   public getConfig() {
     return this.config;
   }
