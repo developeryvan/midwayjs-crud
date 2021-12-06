@@ -8,10 +8,6 @@ import { Role, RoleModel } from '../model/role';
 export class RoleService extends BaseService<Role> {
   @Inject() private readonly casbin: Casbin;
   @InjectEntityModel(Role) protected model: RoleModel;
-  public async getAccessList(roleId: string) {
-    const policyList = await this.casbin.getEnforcer().getFilteredPolicy(0, roleId);
-    return policyList.map(item => Buffer.from(`${item[2]} ${item[1]}`).toString('base64'));
-  }
   public async getAccessTree() {
     const collector = new WebRouterCollector();
     const routePriorityList = await collector.getRoutePriorityList();
@@ -32,9 +28,9 @@ export class RoleService extends BaseService<Role> {
     const accessList = [...parentAccessList, ...childrenAccessList];
     return this.arrayToTree(accessList, 'id', 'parentId');
   }
-  public async removeAccessList(roleId: string) {
-    await this.casbin.getEnforcer().removeFilteredPolicy(0, roleId);
-    return true;
+  public async getAccessList(roleId: string) {
+    const policyList = await this.casbin.getEnforcer().getFilteredPolicy(0, roleId);
+    return policyList.map(item => Buffer.from(`${item[2]} ${item[1]}`).toString('base64'));
   }
   public async updateAccessList(roleId: string, accessList: string[]) {
     const enforcer = this.casbin.getEnforcer();
@@ -43,6 +39,10 @@ export class RoleService extends BaseService<Role> {
       const [act, obj] = Buffer.from(access, 'base64').toString().split(' ');
       await enforcer.addPolicy(roleId, obj, act);
     }
+    return true;
+  }
+  public async removeAccessList(roleId: string) {
+    await this.casbin.getEnforcer().removeFilteredPolicy(0, roleId);
     return true;
   }
   private arrayToTree(data, id: string, parentId: string) {
