@@ -1,7 +1,7 @@
 import { FilterQuery, Model, QueryOptions } from 'mongoose';
 export interface PaginateOptions extends QueryOptions {
-  limit?: number | undefined;
-  page?: number | undefined;
+  limit?: number;
+  page?: number;
 }
 export interface PaginateResult<T> {
   docs: T[];
@@ -9,10 +9,10 @@ export interface PaginateResult<T> {
   hasPrevPage: boolean;
   limit: number;
   meta?: unknown;
-  nextPage?: number | null | undefined;
-  page?: number | undefined;
+  nextPage?: number;
+  page?: number;
   pagingCounter: number;
-  prevPage?: number | null | undefined;
+  prevPage?: number;
   totalDocs: number;
   totalPages: number;
 }

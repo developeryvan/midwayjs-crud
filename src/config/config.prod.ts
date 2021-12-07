@@ -1,6 +1,13 @@
 const config = {
   env: process.env.env || 'prod',
-  nacosClient: { serverAddr: 'localhost:8848', username: 'nacos', password: '123456', namespace: 'public', dataId: 'prod.json', group: 'DEFAULT_GROUP' },
+  nacosClient: {
+    serverAddr: 'localhost:8848',
+    username: 'nacos',
+    password: '123456',
+    namespace: 'public',
+    dataId: 'prod.json',
+    group: 'DEFAULT_GROUP',
+  },
   // task: { prefix: 'task', defaultJobOptions: { repeat: { tz: 'Asia/Shanghai' } }, redis: { host: 'localhost', port: 6379, password: '', db: 0 } },
   // redis: {
   //   clients: {

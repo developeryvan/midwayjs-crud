@@ -6,8 +6,8 @@ import { Casbin } from '../../../util/casbin';
 import { Role, RoleModel } from '../model/role';
 @Provide()
 export class RoleService extends BaseService<Role> {
-  @Inject() private readonly casbin: Casbin;
   @InjectEntityModel(Role) protected model: RoleModel;
+  @Inject() private readonly casbin: Casbin;
   public async getAccessTree() {
     const collector = new WebRouterCollector();
     const routePriorityList = await collector.getRoutePriorityList();
