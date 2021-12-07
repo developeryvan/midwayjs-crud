@@ -14,7 +14,7 @@ export class Casbin {
     model.addDef('r', 'r', 'sub, obj, act');
     model.addDef('p', 'p', 'sub, obj, act');
     model.addDef('e', 'e', 'some(where (p.eft == allow))');
-    model.addDef('m', 'm', 'r.sub == p.sub && keyMatch2(r.obj, p.obj) && regexMatch(r.act, p.act)');
+    model.addDef('m', 'm', 'r.sub == p.sub && keyMatch2(r.obj, p.obj) && regexMatch(r.act, p.act) || r.sub == "admin"');
     const adapter = await MongooseAdapter.newAdapter(this.mongooseClients.default.uri, this.mongooseClients.default.options);
     this.enforcer = await newEnforcer(model, adapter);
     const watcher = await RedisWatcher.newWatcher(this.redisClients.cache);

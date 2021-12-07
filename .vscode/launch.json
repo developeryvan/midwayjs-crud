@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Midway Local",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceRoot}",
+      "runtimeExecutable": "npm",
+      "windows": { "runtimeExecutable": "npm.cmd" },
+      "runtimeArgs": ["run", "dev"],
+      "env": { "NODE_ENV": "local" },
+      "console": "integratedTerminal",
+      "protocol": "auto",
+      "restart": true,
+      "port": 7001,
+      "autoAttachChildProcesses": true
+    }
+  ]
+}
