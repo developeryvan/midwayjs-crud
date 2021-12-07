@@ -30,3 +30,7 @@ open http://localhost:7001/
 ###### 部署
 
 如需进一步了解，参见[midway 部署文档](https://www.yuque.com/midwayjs/midway_v2/deployment 'midway部署文档')
+
+##联系我(欢迎交流)
+
+<img src="https://user-images.githubusercontent.com/47513562/145054555-7f644e71-d8d0-4d24-8b9e-e3b03691d7f5.jpg" width="200px">
