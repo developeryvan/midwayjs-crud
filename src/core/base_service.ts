@@ -1,7 +1,7 @@
 import { DocumentType } from '@typegoose/typegoose/lib/types';
 import { FilterQuery, QueryOptions, UpdateQuery } from 'mongoose';
 import { BaseModel, PaginateOptions, PaginateResult } from './base_model';
-export class BaseService<T> {
+export abstract class BaseService<T> {
   protected model: BaseModel<DocumentType<T>>;
   public async create(data: T): Promise<DocumentType<T>> {
     return this.model.create(data);
