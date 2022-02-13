@@ -7,6 +7,17 @@ import { User, UserModel } from '../model/user';
 @Provide()
 export class UserService extends BaseService<User> {
   @InjectEntityModel(User) protected model: UserModel;
+  public async create(body: User) {
+    const { phone, username, nickname, password } = body;
+    const existModel = await this.model.countDocuments({ phone });
+    if (existModel) {
+      throw new Error('用户已存在');
+    }
+    const encryptPassword = this.crypto.encrypt(password);
+    const data = Object.assign(body, { username: username || phone, nickname: nickname || phone, password: encryptPassword });
+    const model = await this.model.create(data);
+    return Object.assign(model, { password: null });
+  }
   @Inject() private readonly crypto: Crypto;
   @Inject() private readonly jwt: Jwt;
   @Init()
@@ -22,19 +33,6 @@ export class UserService extends BaseService<User> {
       });
     }
   }
-  public async create(body: User) {
-    const { phone, username, nickname, password } = body;
-    const existModel = await this.model.countDocuments({ phone });
-    if (existModel) throw { message: 'the user already exists' };
-    const encryptPassword = this.crypto.encrypt(password);
-    const data = Object.assign(body, {
-      username: username || phone,
-      nickname: nickname || phone,
-      password: encryptPassword,
-    });
-    const model = await this.model.create(data);
-    return Object.assign(model, { password: null });
-  }
   public async login(body: { phone?: string; username?: string; password: string }) {
     const { phone = '', username = '' } = body;
     const password = this.crypto.encrypt(body.password);
@@ -44,7 +42,9 @@ export class UserService extends BaseService<User> {
         { username, password, status: true },
       ],
     });
-    if (!model) throw { message: 'login failed' };
+    if (!model) {
+      throw new Error('用户名或密码错误');
+    }
     return this.jwt.sign({
       _id: model._id,
       phone: model.phone,

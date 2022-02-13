@@ -39,11 +39,9 @@ export class RoleService extends BaseService<Role> {
       const [act, obj] = Buffer.from(access, 'base64').toString().split(' ');
       await enforcer.addPolicy(roleId, obj, act);
     }
-    return true;
   }
   public async removeAccessList(roleId: string) {
     await this.casbin.getEnforcer().removeFilteredPolicy(0, roleId);
-    return true;
   }
   private arrayToTree(data, id: string, parentId: string) {
     const result = [];

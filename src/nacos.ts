@@ -1,8 +1,8 @@
 import { IMidwayApplication } from '@midwayjs/core';
 import { App, Config, Init, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
 import { NacosConfigClient } from 'nacos';
-@Scope(ScopeEnum.Singleton)
 @Provide()
+@Scope(ScopeEnum.Singleton)
 export class Nacos {
   @App() private readonly app: IMidwayApplication;
   @Config('nacosClient') private readonly nacosClientConfig;

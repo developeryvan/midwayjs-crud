@@ -1,27 +1,26 @@
-import { Provide } from '@midwayjs/decorator';
-import { Context, IMidwayKoaNext, IWebMiddleware } from '@midwayjs/koa';
+import { IMiddleware } from '@midwayjs/core';
+import { Inject, Middleware } from '@midwayjs/decorator';
+import { Context, NextFunction } from '@midwayjs/koa';
 import { ReportService } from '../modules/common/service/report';
-@Provide()
-export class ReportMiddleware implements IWebMiddleware {
+@Middleware()
+export class ReportMiddleware implements IMiddleware<Context, NextFunction> {
+  @Inject() private readonly reportService: ReportService;
   public resolve() {
-    return async (ctx: Context, next: IMidwayKoaNext): Promise<void> => {
+    return async (ctx: Context, next: NextFunction) => {
       const startTime = Date.now();
-      const { ip, url } = ctx;
-      const { method, body } = ctx.request;
+      const { url, method, headers, request } = ctx;
+      const ip = (headers['x-real-ip'] || headers['x-forwarded-for'] || ctx.ip) as string;
       await next();
       const responseTime = Date.now() - startTime;
-      const reportService = await ctx.requestContext.getAsync<ReportService>('reportService');
-      const report = await reportService.create({
+      const report = await this.reportService.create({
         ip,
         url,
         method,
-        body: JSON.stringify(body),
+        body: JSON.stringify(request.body),
         response: JSON.stringify(ctx.body),
         responseTime,
       });
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      if (ctx.body?.header) ctx.body.header = Object.assign(ctx.body.header, { requestId: report._id });
+      Object.assign((ctx.body as { header; content })?.header || {}, { requestId: report._id });
     };
   }
 }

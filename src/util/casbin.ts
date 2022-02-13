@@ -2,8 +2,8 @@ import { RedisWatcher } from '@casbin/redis-watcher';
 import { Config, Init, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
 import { Enforcer, newEnforcer, newModel } from 'casbin';
 import { MongooseAdapter } from 'casbin-mongoose-adapter';
-@Scope(ScopeEnum.Singleton)
 @Provide()
+@Scope(ScopeEnum.Singleton)
 export class Casbin {
   @Config('mongoose.clients') private readonly mongooseClients;
   @Config('redis.clients') private readonly redisClients;

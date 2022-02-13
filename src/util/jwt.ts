@@ -2,8 +2,8 @@ import { Config, Inject, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
 import * as jwt from 'jsonwebtoken';
 import { Crypto } from './crypto';
 import { Lock } from './lock';
-@Scope(ScopeEnum.Singleton)
 @Provide()
+@Scope(ScopeEnum.Singleton)
 export class Jwt {
   @Config('jwt.secret') private readonly secret;
   @Config('jwt.signOptions') private readonly signOptions;

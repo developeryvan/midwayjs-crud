@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <title>&lrm;</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      window.onload = function () {
+        if (/firefox|chrome/.test(navigator.userAgent.toLowerCase())) {
+          window.location.href = 'about:blank';
+          window.close();
+        } else {
+          window.opener = null;
+          window.open('', '_self', '');
+          window.close();
+        }
+      };
+    </script>
+  </body>
+</html>

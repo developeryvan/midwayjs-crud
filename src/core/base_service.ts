@@ -6,9 +6,6 @@ export abstract class BaseService<T> {
   public async create(data: T): Promise<DocumentType<T>> {
     return this.model.create(data);
   }
-  public async deleteById(id: string): Promise<DocumentType<T>> {
-    return this.model.findByIdAndRemove(id);
-  }
   public async findAll(filter: FilterQuery<DocumentType<T>>, projection?, options?: QueryOptions): Promise<DocumentType<T>[]> {
     return this.model.find(filter, projection, options);
   }
@@ -23,5 +20,8 @@ export abstract class BaseService<T> {
   }
   public async updateById(id: string, update: UpdateQuery<DocumentType<T>>, options?: QueryOptions): Promise<DocumentType<T>> {
     return this.model.findByIdAndUpdate(id, update, { new: true, ...options });
+  }
+  public async deleteById(id: string): Promise<DocumentType<T>> {
+    return this.model.findByIdAndRemove(id);
   }
 }

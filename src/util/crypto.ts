@@ -1,9 +1,9 @@
-import * as crypto from 'crypto';
 import { Config, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
-@Scope(ScopeEnum.Singleton)
+import * as crypto from 'crypto';
 @Provide()
+@Scope(ScopeEnum.Singleton)
 export class Crypto {
-  @Config('cipherKey') private readonly cipherKey: string;
+  @Config('keys') private readonly cipherKey: string;
   public decrypt(str: string, cipherKey?: string): string {
     const key = cipherKey || this.cipherKey || Buffer.alloc(16, 0);
     const iv = Buffer.alloc(16, 0);

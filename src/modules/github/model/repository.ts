@@ -1,11 +1,12 @@
 import { EntityModel } from '@midwayjs/typegoose';
 import { DocumentType, ModelOptions, plugin, prop } from '@typegoose/typegoose';
 import * as mongoosePaginate from 'mongoose-paginate-v2';
+import { BaseEntity } from '../../../core/base_entity';
 import { BaseModel } from '../../../core/base_model';
 @EntityModel()
 @plugin(mongoosePaginate)
 @ModelOptions({ schemaOptions: { collection: 'github_repository', timestamps: true } })
-export class GithubRepository {
+export class GithubRepository extends BaseEntity {
   @prop({ required: true }) public type: string;
   @prop({ required: true }) public keyword: string;
   @prop({ required: true, unique: true }) public name: string;

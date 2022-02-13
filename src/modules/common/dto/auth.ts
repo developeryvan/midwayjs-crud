@@ -1,9 +1,9 @@
-import { Rule, RuleType } from '@midwayjs/validate';
+import { ApiProperty } from '@midwayjs/swagger';
 export class LoginDto {
-  @Rule(RuleType.string()) public password: string;
-  @Rule(RuleType.string()) public phone: string;
-  @Rule(RuleType.string()) public username: string;
+  @ApiProperty() public password: string;
+  @ApiProperty() public phone: string;
+  @ApiProperty() public username: string;
 }
 export class LogoutDto {
-  @Rule(RuleType.string()) public token: string;
+  @ApiProperty() public token: string;
 }
