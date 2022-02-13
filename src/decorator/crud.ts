@@ -2,18 +2,17 @@ import { CONTROLLER_KEY, Del, Get, Post, Provide, Put, saveClassMetadata, saveMo
 const { entries, getOwnPropertyDescriptors, getPrototypeOf } = Object;
 export function Crud(prefix = '/', routerOptions, crudOptions): ClassDecorator {
   return target => {
-    const targetPrototype = target.prototype;
-    let descriptors = getOwnPropertyDescriptors(targetPrototype);
-    let proto = getPrototypeOf(target);
-    while (proto.prototype) {
-      const protoDescriptors = getOwnPropertyDescriptors(proto.prototype);
-      descriptors = { ...protoDescriptors, ...descriptors };
-      proto = getPrototypeOf(proto);
+    let descriptors = {};
+    let object = target;
+    while (object.prototype) {
+      const protoDescriptors = getOwnPropertyDescriptors(object.prototype);
+      descriptors = { ...descriptors, ...protoDescriptors };
+      object = getPrototypeOf(object);
     }
-    for (const [propName, descriptor] of entries(descriptors)) {
+    for (const [propertyKey, descriptor] of entries(descriptors)) {
       const { api } = crudOptions;
       let decorator;
-      switch (propName) {
+      switch (propertyKey) {
         case 'index':
           decorator = Get('/', { description: '列表' });
           break;
@@ -30,12 +29,10 @@ export function Crud(prefix = '/', routerOptions, crudOptions): ClassDecorator {
           decorator = Del('/:id', { description: '删除' });
           break;
       }
-      if (decorator) {
-        if (api?.length && !api.includes(propName)) {
-          continue;
-        }
-        decorator(target, propName, descriptor);
+      if (!decorator || (api?.length && !api.includes(propertyKey))) {
+        continue;
       }
+      decorator(target, propertyKey, descriptor);
     }
     saveModule(CONTROLLER_KEY, target);
     saveClassMetadata(CONTROLLER_KEY, { prefix, routerOptions, crudOptions }, target);
