@@ -4,12 +4,21 @@ import { Context, NextFunction } from '@midwayjs/koa';
 import { Casbin } from '../util/casbin';
 import { Jwt } from '../util/jwt';
 import { PathToRegexp } from '../util/path_to_regexp';
+
 @Middleware()
 export class AuthMiddleware implements IMiddleware<Context, NextFunction> {
-  @Config('whitelist') private readonly whitelist;
-  @Inject() private readonly casbin: Casbin;
-  @Inject() private readonly jwt: Jwt;
-  @Inject() private readonly pathToRegexp: PathToRegexp;
+  @Config('whitelist')
+  private readonly whitelist;
+
+  @Inject()
+  private readonly casbin: Casbin;
+
+  @Inject()
+  private readonly jwt: Jwt;
+
+  @Inject()
+  private readonly pathToRegexp: PathToRegexp;
+
   public resolve() {
     return async (ctx: Context, next: NextFunction) => {
       const { originalUrl: path, header, method } = ctx;

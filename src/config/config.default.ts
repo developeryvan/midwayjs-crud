@@ -1,4 +1,5 @@
 import { MidwayConfig } from '@midwayjs/core';
+
 export default {
   bodyParser: { enableTypes: ['json', 'form', 'text', 'xml'] },
   cors: {

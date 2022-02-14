@@ -1,5 +1,7 @@
 import { CONTROLLER_KEY, Del, Get, Post, Provide, Put, saveClassMetadata, saveModule, Scope, ScopeEnum } from '@midwayjs/decorator';
+
 const { entries, getOwnPropertyDescriptors, getPrototypeOf } = Object;
+
 export function Crud(prefix = '/', routerOptions, crudOptions): ClassDecorator {
   return target => {
     let descriptors = {};

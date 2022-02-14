@@ -1,12 +1,18 @@
 import { IMidwayApplication } from '@midwayjs/core';
 import { App, Config, Init, Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
 import { NacosConfigClient } from 'nacos';
+
 @Provide()
 @Scope(ScopeEnum.Singleton)
 export class Nacos {
-  @App() private readonly app: IMidwayApplication;
-  @Config('nacosClient') private readonly nacosClientConfig;
+  @App()
+  private readonly app: IMidwayApplication;
+
+  @Config('nacosClient')
+  private readonly nacosClientConfig;
+
   private config;
+
   @Init()
   public async init(): Promise<void> {
     const { dataId, group } = this.nacosClientConfig;
@@ -16,6 +22,7 @@ export class Nacos {
     this.config = configStr ? JSON.parse(configStr) : {};
     this.app.addConfigObject(this.config);
   }
+
   public getConfig() {
     return this.config;
   }

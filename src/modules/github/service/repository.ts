@@ -3,14 +3,18 @@ import { InjectEntityModel } from '@midwayjs/typegoose';
 import { BaseService } from '../../../core/base_service';
 import request from '../../../util/request';
 import { GithubRepository, GithubRepositoryModel } from '../model/repository';
+
 @Provide()
 export class GithubRepositoryService extends BaseService<GithubRepository> {
-  @InjectEntityModel(GithubRepository) protected model: GithubRepositoryModel;
+  @InjectEntityModel(GithubRepository)
+  protected model: GithubRepositoryModel;
+
   @Init()
   public async init(): Promise<void> {
     // this.fetchAll('decorator', 10);
     // this.fetchByCode('controller path:decorator extension:ts');
   }
+
   public async fetchAll(keyword: string, minStar = 0) {
     const pageSize = 100;
     let page = 1;
@@ -49,6 +53,7 @@ export class GithubRepositoryService extends BaseService<GithubRepository> {
     }
     console.log('done');
   }
+
   public async fetchByCode(keyword: string) {
     const pageSize = 100;
     let page = 1;
@@ -86,6 +91,7 @@ export class GithubRepositoryService extends BaseService<GithubRepository> {
     } while (page <= pages);
     console.log('done');
   }
+
   private async fetchOne(name: string) {
     const {
       html_url: url,
@@ -96,6 +102,7 @@ export class GithubRepositoryService extends BaseService<GithubRepository> {
     } = await this.request(`https://api.github.com/repos/${name}`);
     return { name, url, description, language, star, lastPushedAt };
   }
+
   private async request(url: string, retry = 3) {
     try {
       // todo: token在https://github.com/settings/tokens获取

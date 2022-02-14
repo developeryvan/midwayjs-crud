@@ -4,9 +4,18 @@ import { BaseService } from '../../../core/base_service';
 import { Crypto } from '../../../util/crypto';
 import { Jwt } from '../../../util/jwt';
 import { User, UserModel } from '../model/user';
+
 @Provide()
 export class UserService extends BaseService<User> {
-  @InjectEntityModel(User) protected model: UserModel;
+  @InjectEntityModel(User)
+  protected model: UserModel;
+
+  @Inject()
+  private readonly crypto: Crypto;
+
+  @Inject()
+  private readonly jwt: Jwt;
+
   public async create(body: User) {
     const { phone, username, nickname, password } = body;
     const existModel = await this.model.countDocuments({ phone });
@@ -18,8 +27,7 @@ export class UserService extends BaseService<User> {
     const model = await this.model.create(data);
     return Object.assign(model, { password: null });
   }
-  @Inject() private readonly crypto: Crypto;
-  @Inject() private readonly jwt: Jwt;
+
   @Init()
   public async init(): Promise<void> {
     const existModel = await this.model.countDocuments({ username: 'admin' });
@@ -33,6 +41,7 @@ export class UserService extends BaseService<User> {
       });
     }
   }
+
   public async login(body: { phone?: string; username?: string; password: string }) {
     const { phone = '', username = '' } = body;
     const password = this.crypto.encrypt(body.password);

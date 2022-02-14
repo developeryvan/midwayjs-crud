@@ -1,5 +1,6 @@
 import { Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
 import { pathToRegexp } from 'path-to-regexp';
+
 @Provide()
 @Scope(ScopeEnum.Singleton)
 export class PathToRegexp {

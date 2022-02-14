@@ -2,8 +2,9 @@
   "root": true,
   "env": { "jest": true },
   "extends": ["./node_modules/mwts/"],
+  "parser": "@typescript-eslint/parser",
   "parserOptions": { "project": "./tsconfig.json" },
-  "plugins": ["unicorn", "import"],
+  "plugins": ["unicorn", "import", "decorator-position"],
   "ignorePatterns": ["node_modules", "dist", "test", "jest.config.js", "typings"],
   "rules": {
     "@typescript-eslint/array-type": 2,
@@ -23,20 +24,21 @@
     "@typescript-eslint/prefer-readonly": 2,
     "eqeqeq": [2, "always"],
     "no-dupe-class-members": 2,
-    "no-multiple-empty-lines": [2, { "max": 0 }],
+    "no-multiple-empty-lines": [2, { "max": 1 }],
     "object-shorthand": 2,
     "quote-props": [2, "consistent"],
     "space-before-function-paren": [2, { "anonymous": "always", "named": "never", "asyncArrow": "always" }],
     "unicorn/filename-case": [2, { "case": "snakeCase" }],
-    "import/no-duplicates": 2
-    // "import/order": [
-    //   2,
-    //   {
-    //     "alphabetize": { "order": "asc" },
-    //     "groups": ["builtin", "external", "internal", "parent", "sibling", "index", "object", "type", "unknown"],
-    //     "newlines-between": "never",
-    //     "warnOnUnassignedImports": true
-    //   }
-    // ]
+    "import/no-duplicates": 2,
+    "import/order": [
+      2,
+      {
+        "alphabetize": { "order": "asc" },
+        "groups": ["builtin", "external", "internal", "parent", "sibling", "index", "object", "type", "unknown"],
+        "newlines-between": "never",
+        "warnOnUnassignedImports": true
+      }
+    ],
+    "decorator-position/decorator-position": [2, { "printWidth": 150, "properties": "above", "methods": "above" }]
   }
 }

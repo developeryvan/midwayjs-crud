@@ -4,6 +4,7 @@ export enum ApiType {
   WECOM = 'wecom',
   MINIPROGRAM = 'miniprogram',
 }
+
 export enum APIS {
   ADD = 'add',
   UPDATE = 'update',

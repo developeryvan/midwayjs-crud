@@ -4,10 +4,15 @@ import { InjectEntityModel } from '@midwayjs/typegoose';
 import { BaseService } from '../../../core/base_service';
 import { Casbin } from '../../../util/casbin';
 import { Role, RoleModel } from '../model/role';
+
 @Provide()
 export class RoleService extends BaseService<Role> {
-  @InjectEntityModel(Role) protected model: RoleModel;
-  @Inject() private readonly casbin: Casbin;
+  @InjectEntityModel(Role)
+  protected model: RoleModel;
+
+  @Inject()
+  private readonly casbin: Casbin;
+
   public async getAccessTree() {
     const collector = new WebRouterCollector();
     const routePriorityList = await collector.getRoutePriorityList();
@@ -28,10 +33,12 @@ export class RoleService extends BaseService<Role> {
     const accessList = [...parentAccessList, ...childrenAccessList];
     return this.arrayToTree(accessList, 'id', 'parentId');
   }
+
   public async getAccessList(roleId: string) {
     const policyList = await this.casbin.getEnforcer().getFilteredPolicy(0, roleId);
     return policyList.map(item => Buffer.from(`${item[2]} ${item[1]}`).toString('base64'));
   }
+
   public async updateAccessList(roleId: string, accessList: string[]) {
     const enforcer = this.casbin.getEnforcer();
     await enforcer.removeFilteredPolicy(0, roleId);
@@ -40,9 +47,11 @@ export class RoleService extends BaseService<Role> {
       await enforcer.addPolicy(roleId, obj, act);
     }
   }
+
   public async removeAccessList(roleId: string) {
     await this.casbin.getEnforcer().removeFilteredPolicy(0, roleId);
   }
+
   private arrayToTree(data, id: string, parentId: string) {
     const result = [];
     const hash = {};

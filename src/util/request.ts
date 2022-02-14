@@ -1,8 +1,8 @@
 // import { SocksProxyAgent } from 'socks-proxy-agent';
-// import * as tunnel from 'tunnel';
 import * as https from 'https';
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import axiosRetry from 'axios-retry';
+// import * as tunnel from 'tunnel';
 const request: AxiosInstance = axios.create({
   headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko' },
   maxRedirects: 0,

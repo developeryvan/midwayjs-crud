@@ -3,17 +3,34 @@ import { DocumentType, ModelOptions, plugin, prop } from '@typegoose/typegoose';
 import * as mongoosePaginate from 'mongoose-paginate-v2';
 import { BaseEntity } from '../../../core/base_entity';
 import { BaseModel } from '../../../core/base_model';
+
 @EntityModel()
 @plugin(mongoosePaginate)
 @ModelOptions({ schemaOptions: { collection: 'github_repository', timestamps: true } })
 export class GithubRepository extends BaseEntity {
-  @prop({ required: true }) public type: string;
-  @prop({ required: true }) public keyword: string;
-  @prop({ required: true, unique: true }) public name: string;
-  @prop({ required: true }) public url: string;
-  @prop({ required: true }) public description: string;
-  @prop() public language: string;
-  @prop() public star: number;
-  @prop() public lastPushedAt: Date;
+  @prop({ required: true })
+  public type: string;
+
+  @prop({ required: true })
+  public keyword: string;
+
+  @prop({ required: true, unique: true })
+  public name: string;
+
+  @prop({ required: true })
+  public url: string;
+
+  @prop({ required: true })
+  public description: string;
+
+  @prop()
+  public language: string;
+
+  @prop()
+  public star: number;
+
+  @prop()
+  public lastPushedAt: Date;
 }
+
 export type GithubRepositoryModel = BaseModel<DocumentType<GithubRepository>>;
