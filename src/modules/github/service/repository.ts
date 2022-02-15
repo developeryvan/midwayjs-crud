@@ -1,4 +1,4 @@
-import { Init, Provide } from '@midwayjs/decorator';
+import { FORMAT, Init, Provide, Task } from '@midwayjs/decorator';
 import { InjectEntityModel } from '@midwayjs/typegoose';
 import { BaseService } from '../../../core/base_service';
 import request from '../../../util/request';
@@ -15,7 +15,8 @@ export class GithubRepositoryService extends BaseService<GithubRepository> {
     // this.fetchByCode('controller path:decorator extension:ts');
   }
 
-  public async fetchAll(keyword: string, minStar = 0) {
+  @Task({ repeat: { cron: FORMAT.CRONTAB.EVERY_DAY } })
+  public async fetchAll(keyword = '', minStar = 10000) {
     const pageSize = 100;
     let page = 1;
     let pages = 1;
