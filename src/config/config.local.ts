@@ -1,5 +1,6 @@
-const config = {
-  env: process.env.env || 'prod',
+import { MidwayConfig } from '@midwayjs/core';
+export default {
+  env: process.env.env || 'local',
   nacosClient: {
     serverAddr: 'localhost:8848',
     username: 'nacos',
@@ -25,5 +26,4 @@ const config = {
     prefix: 'task',
     redis: { host: '119.91.87.137', port: 10085, password: '12345678', db: 2 },
   },
-};
-export default config;
+} as MidwayConfig;

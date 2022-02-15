@@ -12,7 +12,6 @@ logs/
 node_modules/
 npm-debug.log
 run/
-src/config/config.local.ts
 typings/
 yarn-error.log
 yarn.lock
