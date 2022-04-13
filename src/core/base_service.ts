@@ -1,35 +1,63 @@
-import { DocumentType } from '@typegoose/typegoose/lib/types';
-import { FilterQuery, QueryOptions, UpdateQuery } from 'mongoose';
-import { BaseModel, PaginateOptions, PaginateResult } from './base_model';
+import { App, Inject } from '@midwayjs/decorator';
+import { Application, Context } from '@midwayjs/koa';
+
+export interface Options {
+  select?: unknown;
+
+  include?: unknown;
+
+  sort?: unknown;
+
+  page?: number;
+
+  limit?: number;
+}
 
 export abstract class BaseService<T> {
-  protected model: BaseModel<DocumentType<T>>;
+  @App()
+  protected app: Application;
 
-  public async create(data: T): Promise<DocumentType<T>> {
-    return this.model.create(data);
+  @Inject()
+  protected ctx: Context;
+
+  protected abstract model;
+
+  public async create(data: Partial<T>): Promise<T> {
+    const model = await this.model.create({ data });
+    return model;
   }
 
-  public async findAll(filter: FilterQuery<DocumentType<T>>, projection?, options?: QueryOptions): Promise<DocumentType<T>[]> {
-    return this.model.find(filter, projection, options);
+  public async findAll(where: Partial<T>, options: Partial<Options>): Promise<{ rows: T[]; count: number }> {
+    const { select, include, sort = { createdAt: 'desc' }, page = 1, limit = 20 } = options;
+    const orderBy = typeof sort === 'string' ? JSON.parse(sort) : sort;
+    const skip = (Number(page) - 1) * Number(limit);
+    const take = Number(limit);
+    const [rows, count] = await Promise.all([
+      this.model.findMany({ where, select, include, orderBy, skip, take }),
+      this.model.count({ where }),
+    ]);
+    return { rows, count };
   }
 
-  public async findAllWithPaginate(filter: FilterQuery<DocumentType<T>>, options?: PaginateOptions): Promise<PaginateResult<DocumentType<T>>> {
-    return this.model.paginate(filter, options);
+  public async findById(id: string, options: Partial<Options>): Promise<T> {
+    const { select, include } = options;
+    const model = await this.model.findUnique({ where: { id }, select, include });
+    return model;
   }
 
-  public async findById(id: string, projection?, options?: QueryOptions): Promise<DocumentType<T>> {
-    return this.model.findById(id, projection, options);
+  public async findOne(where: Partial<T>, options: Partial<Options>): Promise<T> {
+    const { select, include } = options;
+    const model = await this.model.findFirst({ where, select, include });
+    return model;
   }
 
-  public async findOne(filter: FilterQuery<DocumentType<T>>, projection?, options?: QueryOptions): Promise<DocumentType<T>> {
-    return this.model.findOne(filter, projection, options);
+  public async updateOne(where: Partial<T>, data: Partial<T>) {
+    const model = await this.model.upsert({ where, update: data, create: data });
+    return model;
   }
 
-  public async updateById(id: string, update: UpdateQuery<DocumentType<T>>, options?: QueryOptions): Promise<DocumentType<T>> {
-    return this.model.findByIdAndUpdate(id, update, { new: true, ...options });
-  }
-
-  public async deleteById(id: string): Promise<DocumentType<T>> {
-    return this.model.findByIdAndRemove(id);
+  public async deleteById(id: string) {
+    const model = await this.model.delete({ where: { id } });
+    return model;
   }
 }

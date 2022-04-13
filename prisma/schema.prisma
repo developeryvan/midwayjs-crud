@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model CasbinRule {
+  id    Int     @id @default(autoincrement())
+  ptype String
+  v0    String?
+  v1    String?
+  v2    String?
+  v3    String?
+  v4    String?
+  v5    String?
+
+  @@map("casbin_rule")
+}
+
+model Log {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+  type        String   @default("info")
+  key         String   @default("unknown")
+  description String
+  content     Json?
+}
+
+model Report {
+  id           String   @id @default(cuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now()) @updatedAt
+  ip           String
+  method       String
+  path         String
+  query        String   @db.Text
+  body         String   @db.Text
+  response     String   @db.Text
+  responseTime Int
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  status    Boolean  @default(true)
+  username  String   @unique
+  phone     String?
+  nickname  String?
+  password  String?
+  avatar    String?
+  role      String?
+}
+
+model Role {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  status    Boolean  @default(true)
+  roleId    String   @unique
+  roleName  String   @unique
+}
+
+model GithubRepository {
+  id                Int       @id @default(autoincrement())
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @default(now()) @updatedAt
+  name              String    @unique
+  url               String
+  description       String    @db.LongText
+  language          String    @default("")
+  star              Int       @default(0)
+  lastPushedAt      DateTime?
+  isCn              Boolean   @default(true)
+  repositoryKeyword String    @default("")
+  codeKeyword       String    @default("")
+
+  @@map("github_repository")
+}

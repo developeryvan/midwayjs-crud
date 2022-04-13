@@ -4,25 +4,18 @@
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
     "inlineSourceMap": true,
     "module": "commonjs",
     "moduleResolution": "node",
     "noImplicitThis": true,
     "noUnusedLocals": false,
-    "noUnusedParameters": false,
     "outDir": "dist",
     "pretty": true,
     "skipLibCheck": true,
     "stripInternal": true,
-    "target": "ES2018",
-    "typeRoots": [
-      "./typings",
-      "./node_modules/@types"
-    ]
+    "target": "es2018",
+    "typeRoots": ["./typings", "./node_modules/@types"]
   },
-  "exclude": [
-    "dist",
-    "node_modules",
-    "test"
-  ]
+  "exclude": ["dist", "node_modules", "test"]
 }

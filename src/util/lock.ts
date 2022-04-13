@@ -5,7 +5,7 @@ import { RedisServiceFactory } from '@midwayjs/redis';
 @Scope(ScopeEnum.Singleton)
 export class Lock {
   @Inject()
-  private readonly redis: RedisServiceFactory;
+  private redis: RedisServiceFactory;
 
   public async checkLock(key: string) {
     const result = await this.redis.get('cache').get(key);

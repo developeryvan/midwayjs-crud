@@ -17,7 +17,7 @@ export class PathToRegexp {
       }
       return pattern.test(path);
     } else if (Array.isArray(pattern)) {
-      return pattern.some(item => this.pathMatch(item, path, isReturnTrue));
+      return pattern.some((item) => this.pathMatch(item, path, isReturnTrue));
     } else {
       return isReturnTrue;
     }

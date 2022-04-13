@@ -1,44 +1,117 @@
-import { CONTROLLER_KEY, Del, Get, Post, Provide, Put, saveClassMetadata, saveModule, Scope, ScopeEnum } from '@midwayjs/decorator';
+import { Controller, Del, Get, Post, Put } from '@midwayjs/decorator';
+import { ApiBody, ApiParam, ApiProperty, ApiQuery } from '@midwayjs/swagger';
 
-const { entries, getOwnPropertyDescriptors, getPrototypeOf } = Object;
+class BaseDto {
+  @ApiProperty()
+  public select: unknown;
 
-export function Crud(prefix = '/', routerOptions, crudOptions): ClassDecorator {
-  return target => {
-    let descriptors = {};
-    let object = target;
-    while (object.prototype) {
-      const protoDescriptors = getOwnPropertyDescriptors(object.prototype);
-      descriptors = { ...descriptors, ...protoDescriptors };
-      object = getPrototypeOf(object);
-    }
-    for (const [propertyKey, descriptor] of entries(descriptors)) {
-      const { api } = crudOptions;
-      let decorator;
-      switch (propertyKey) {
-        case 'index':
-          decorator = Get('/', { description: '列表' });
-          break;
-        case 'show':
-          decorator = Get('/:id', { description: '详情' });
-          break;
-        case 'create':
-          decorator = Post('/', { description: '新建' });
-          break;
-        case 'update':
-          decorator = Put('/:id', { description: '更新' });
-          break;
-        case 'destroy':
-          decorator = Del('/:id', { description: '删除' });
-          break;
-      }
-      if (!decorator || (api?.length && !api.includes(propertyKey))) {
-        continue;
-      }
-      decorator(target, propertyKey, descriptor);
-    }
-    saveModule(CONTROLLER_KEY, target);
-    saveClassMetadata(CONTROLLER_KEY, { prefix, routerOptions, crudOptions }, target);
-    Scope(ScopeEnum.Request)(target);
-    Provide()(target);
-  };
+  @ApiProperty()
+  public include: unknown;
+
+  @ApiProperty()
+  public sort: unknown;
+
+  @ApiProperty()
+  public page: number;
+
+  @ApiProperty()
+  public limit: number;
 }
+
+export const Crud = (prefix = '/', routerOptions, crudOptions): ClassDecorator => {
+  const decorators = {
+    index: [
+      Get('/', { description: '列表' }),
+      Get('/platform', { description: '平台列表' }),
+      Get('/my', { description: '用户列表' }),
+      ApiQuery({ type: crudOptions.dto?.index || BaseDto }),
+    ],
+    show: [
+      Get('/:id', { description: '详情' }),
+      ApiParam({ name: 'id', type: 'string', required: true }),
+      ApiQuery({ type: BaseDto }),
+    ],
+    create: [
+      Post('/', { description: '新建' }),
+      Post('/platform', { description: '平台新建' }),
+      Post('/my', { description: '用户新建' }),
+      ApiBody({ type: crudOptions.dto?.create }),
+    ],
+    update: [
+      Put('/:id', { description: '更新' }),
+      ApiParam({ name: 'id', type: 'string', required: true }),
+      ApiBody({ type: crudOptions.dto?.update }),
+    ],
+    destroy: [Del('/:id', { description: '删除' }), ApiParam({ name: 'id', type: 'string', required: true })],
+  };
+  // const routerParams = {
+  //   index: [
+  //     {
+  //       key: WEB_ROUTER_PARAM_KEY,
+  //       parameterIndex: 0,
+  //       propertyName: 'index',
+  //       metadata: { type: RouteParamTypes.QUERY },
+  //       impl: true,
+  //     },
+  //   ],
+  //   show: [
+  //     {
+  //       key: WEB_ROUTER_PARAM_KEY,
+  //       parameterIndex: 1,
+  //       propertyName: 'show',
+  //       metadata: { type: RouteParamTypes.QUERY },
+  //       impl: true,
+  //     },
+  //     {
+  //       key: WEB_ROUTER_PARAM_KEY,
+  //       parameterIndex: 0,
+  //       propertyName: 'show',
+  //       metadata: { type: RouteParamTypes.PARAM, propertyData: 'id' },
+  //       impl: true,
+  //     },
+  //   ],
+  //   create: [
+  //     {
+  //       key: WEB_ROUTER_PARAM_KEY,
+  //       parameterIndex: 1,
+  //       propertyName: 'create',
+  //       metadata: { type: RouteParamTypes.BODY },
+  //       impl: true,
+  //     },
+  //   ],
+  //   update: [
+  //     {
+  //       key: WEB_ROUTER_PARAM_KEY,
+  //       parameterIndex: 1,
+  //       propertyName: 'update',
+  //       metadata: { type: RouteParamTypes.BODY },
+  //       impl: true,
+  //     },
+  //     {
+  //       key: WEB_ROUTER_PARAM_KEY,
+  //       parameterIndex: 0,
+  //       propertyName: 'update',
+  //       metadata: { type: RouteParamTypes.PARAM, propertyData: 'id' },
+  //       impl: true,
+  //     },
+  //   ],
+  //   destroy: [
+  //     {
+  //       key: WEB_ROUTER_PARAM_KEY,
+  //       parameterIndex: 0,
+  //       propertyName: 'destroy',
+  //       metadata: { type: RouteParamTypes.PARAM, propertyData: 'id' },
+  //       impl: true,
+  //     },
+  //   ],
+  // };
+  return (target) => {
+    for (const propertyKey of crudOptions.apis) {
+      Reflect.decorate(decorators[propertyKey], target, propertyKey);
+      // for (const data of routerParams[propertyKey]) {
+      //   attachClassMetadata(INJECT_CUSTOM_PARAM, data, target, propertyKey, 'multi');
+      // }
+    }
+    Controller(prefix, routerOptions)(target);
+  };
+};
