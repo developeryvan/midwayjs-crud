@@ -1,23 +1,37 @@
-import { Provide, Scope, ScopeEnum } from '@midwayjs/decorator';
-import { InjectEntityModel } from '@midwayjs/typegoose';
+import { FORMAT, Inject, Provide, Scope, ScopeEnum, Task } from '@midwayjs/decorator';
+import { Log, PrismaClient } from '@prisma/client';
 import { BaseService } from '../../../core/base_service';
-import { Log, LogModel } from '../model/log';
 
 @Provide()
 @Scope(ScopeEnum.Singleton)
 export class LogService extends BaseService<Log> {
-  @InjectEntityModel(Log)
-  protected model: LogModel;
+  @Inject('prisma')
+  private prismaClient: PrismaClient;
 
-  public async error(key = 'unknown', description: string, content = {}) {
-    return this.model.create({ key, type: 'error', description, content });
+  protected get model() {
+    return this.prismaClient.log;
   }
 
-  public async info(key = 'unknown', description: string, content = {}) {
-    return this.model.create({ key, type: 'info', description, content });
+  @Task({ repeat: { cron: FORMAT.CRONTAB.EVERY_DAY } })
+  public async deleteMany() {
+    await this.model.deleteMany({
+      where: { createdAt: { lte: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 3) } },
+    });
   }
 
-  public async warn(key = 'unknown', description: string, content = {}) {
-    return this.model.create({ key, type: 'warn', description, content });
+  public async error(key: string, description: string, content) {
+    this.app.getLogger().error(content);
+    const model = await this.model.create({ data: { key, type: 'error', description, content } });
+    return model;
+  }
+
+  public async info(key: string, description: string, content) {
+    const model = await this.model.create({ data: { key, type: 'info', description, content } });
+    return model;
+  }
+
+  public async warn(key: string, description: string, content) {
+    const model = await this.model.create({ data: { key, type: 'warn', description, content } });
+    return model;
   }
 }

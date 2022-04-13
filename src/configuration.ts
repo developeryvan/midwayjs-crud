@@ -1,42 +1,69 @@
-import { join } from 'path';
-import { ILifeCycle, IMidwayContainer } from '@midwayjs/core';
+import { IMidwayContainer } from '@midwayjs/core';
 import * as crossDomain from '@midwayjs/cross-domain';
-import { App, Configuration, Inject } from '@midwayjs/decorator';
+import { App, Config, Configuration, Inject } from '@midwayjs/decorator';
 import * as koa from '@midwayjs/koa';
-import * as oss from '@midwayjs/oss';
 import * as redis from '@midwayjs/redis';
+import * as staticFile from '@midwayjs/static-file';
 import * as swagger from '@midwayjs/swagger';
 import * as task from '@midwayjs/task';
-import * as typegoose from '@midwayjs/typegoose';
+import * as upload from '@midwayjs/upload';
 import * as view from '@midwayjs/view-nunjucks';
-import { setGlobalOptions, Severity } from '@typegoose/typegoose';
+import { PrismaClient } from '@prisma/client';
+import { join } from 'path';
 import { DefaultFilter } from './filter/default';
-import { AuthMiddleware } from './middleware/auth';
+import { CasbinMiddleware } from './middleware/casbin';
+import { JwtMiddleware } from './middleware/jwt';
 import { ReportMiddleware } from './middleware/report';
 import { Nacos } from './nacos';
 
-setGlobalOptions({ options: { allowMixed: Severity.ALLOW } });
-
 @Configuration({
-  imports: [crossDomain, koa, oss, redis, task, typegoose, view, { component: swagger, enabledEnvironment: ['local'] }],
-  importConfigs: [join(__dirname, './config/')],
-  conflictCheck: true,
+  imports: [
+    crossDomain,
+    koa,
+    redis,
+    staticFile,
+    task,
+    upload,
+    view,
+    { component: swagger, enabledEnvironment: ['local'] },
+  ],
+  importConfigs: [join(__dirname, './config')],
 })
-export class ContainerLifeCycle implements ILifeCycle {
+export class ContainerLifeCycle {
   @App()
-  private readonly app: koa.Application;
+  private app: koa.Application;
 
   @Inject()
-  private readonly nacos: Nacos;
+  private nacos: Nacos;
+
+  @Config('prisma')
+  private prismaConfig;
 
   public async onConfigLoad() {
     const data = this.nacos.getConfig();
     return { data };
   }
 
-  public async onReady(container: IMidwayContainer) {
-    this.app.useMiddleware([ReportMiddleware, AuthMiddleware]);
+  public async onReady(container: IMidwayContainer): Promise<void> {
+    this.registerPrisma(container);
+    this.app.useMiddleware([ReportMiddleware, JwtMiddleware, CasbinMiddleware]);
     this.app.useFilter([DefaultFilter]);
-    container.getAsync('githubRepositoryService');
+  }
+
+  public async onStop(container: IMidwayContainer): Promise<void> {
+    const prisma = await container.getAsync<PrismaClient>('prisma');
+    prisma.$disconnect();
+  }
+
+  private registerPrisma(container: IMidwayContainer) {
+    const prisma = new PrismaClient({
+      // log: [{ emit: 'event', level: 'query' }],
+      datasources: { db: { url: this.prismaConfig.url } },
+    });
+    prisma.$connect();
+    // prisma.$on('query', (event) => {
+    // console.log(event);
+    // });
+    container.registerObject('prisma', prisma);
   }
 }

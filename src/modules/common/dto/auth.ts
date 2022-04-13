@@ -2,6 +2,15 @@ import { ApiProperty } from '@midwayjs/swagger';
 
 export class LoginDto {
   @ApiProperty()
+  public appid: string;
+
+  @ApiProperty()
+  public code: string;
+
+  @ApiProperty()
+  public method: string;
+
+  @ApiProperty()
   public password: string;
 
   @ApiProperty()
@@ -9,9 +18,4 @@ export class LoginDto {
 
   @ApiProperty()
   public username: string;
-}
-
-export class LogoutDto {
-  @ApiProperty()
-  public token: string;
 }

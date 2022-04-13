@@ -1,29 +1,17 @@
 import { MidwayConfig } from '@midwayjs/core';
+
 export default {
   env: process.env.env || 'local',
-  nacosClient: {
-    serverAddr: 'localhost:8848',
-    username: 'nacos',
-    password: '123456',
-    namespace: 'public',
-    dataId: 'prod.json',
-    group: 'DEFAULT_GROUP',
-  },
-  mongoose: {
-    clients: {
-      default: { uri: 'mongodb://midwayjs:midwayjs666@119.91.87.137:10086/midwayjs', options: { useNewUrlParser: true, useUnifiedTopology: true } },
-      log: { uri: 'mongodb://midwayjs:midwayjs666@119.91.87.137:10086/midwayjs', options: { useNewUrlParser: true, useUnifiedTopology: true } },
-    },
-  },
+  prisma: { url: 'mysql://root:123456@localhost:3306/api' },
   redis: {
     clients: {
-      cache: { host: '119.91.87.137', port: 10085, password: '12345678', db: 0 },
-      session: { host: '119.91.87.137', port: 10085, password: '12345678', db: 1 },
+      cache: { host: 'localhost', port: 6379, password: '', db: 0 },
+      session: { host: 'localhost', port: 6379, password: '', db: 1 },
     },
   },
   task: {
     defaultJobOptions: { repeat: { tz: 'Asia/Shanghai' } },
     prefix: 'task',
-    redis: { host: '119.91.87.137', port: 10085, password: '12345678', db: 2 },
+    redis: { host: 'localhost', port: 6379, password: '', db: 2 },
   },
 } as MidwayConfig;

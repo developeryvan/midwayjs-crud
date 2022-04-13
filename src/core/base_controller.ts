@@ -1,30 +1,32 @@
-import { Inject } from '@midwayjs/decorator';
-import { Context } from '@midwayjs/koa';
-import { BaseService } from './base_service';
+import { App, Inject } from '@midwayjs/decorator';
+import { Application, Context } from '@midwayjs/koa';
 
 export abstract class BaseController {
+  @App()
+  protected app: Application;
+
   @Inject()
   protected ctx: Context;
 
-  protected success(content?) {
-    return { header: { status: 0 }, content };
-  }
-}
-
-export abstract class CrudController<T> extends BaseController {
-  protected service: BaseService<T>;
+  protected service;
 
   public async index() {
     const { query } = this.ctx;
-    const { page = 1, limit = 20, sort = { createdAt: -1 }, ...filter } = query;
-    const result = await this.service.findAllWithPaginate(filter as unknown as T, { page: Number(page), limit: Number(limit), sort });
+    const { select, include, sort = JSON.stringify({ createdAt: -1 }), page = 1, limit = 20, ...where } = query;
+    const result = await this.service.findAll(where, {
+      select,
+      include,
+      sort: JSON.parse(sort as string),
+      page: Number(page),
+      limit: Number(limit),
+    });
     return this.success(result);
   }
 
   public async show() {
-    const { params } = this.ctx;
+    const { params, query } = this.ctx;
     const { id } = params;
-    const result = await this.service.findById(id);
+    const result = await this.service.findById(id, query);
     return this.success(result);
   }
 
@@ -38,7 +40,7 @@ export abstract class CrudController<T> extends BaseController {
     const { params } = this.ctx;
     const { id } = params;
     const { body } = this.ctx.request;
-    const result = await this.service.updateById(id, body);
+    const result = await this.service.updateOne({ id }, body);
     return this.success(result);
   }
 
@@ -47,5 +49,9 @@ export abstract class CrudController<T> extends BaseController {
     const { id } = params;
     const result = await this.service.deleteById(id);
     return this.success(result);
+  }
+
+  protected success(content?) {
+    return { header: { status: 0 }, content };
   }
 }

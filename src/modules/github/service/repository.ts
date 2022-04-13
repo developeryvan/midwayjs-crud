@@ -1,99 +1,111 @@
-import { FORMAT, Init, Provide, Task } from '@midwayjs/decorator';
-import { InjectEntityModel } from '@midwayjs/typegoose';
+import { Inject, Provide } from '@midwayjs/decorator';
+import { GithubRepository, PrismaClient } from '@prisma/client';
+import * as dayjs from 'dayjs';
+import { mkdir, writeFile } from 'fs/promises';
+import { join } from 'path';
 import { BaseService } from '../../../core/base_service';
 import request from '../../../util/request';
-import { GithubRepository, GithubRepositoryModel } from '../model/repository';
+import { Sql } from '../../../util/sql';
 
 @Provide()
 export class GithubRepositoryService extends BaseService<GithubRepository> {
-  @InjectEntityModel(GithubRepository)
-  protected model: GithubRepositoryModel;
+  @Inject('prisma')
+  private prismaClient: PrismaClient;
 
-  @Init()
-  public async init(): Promise<void> {
-    // this.fetchAll('decorator', 10);
-    // this.fetchByCode('controller path:decorator extension:ts');
+  @Inject()
+  private sql: Sql;
+
+  protected get model() {
+    return this.prismaClient.githubRepository;
   }
 
-  @Task({ repeat: { cron: FORMAT.CRONTAB.EVERY_DAY } })
-  public async fetchAll(keyword = '', minStar = 10000) {
+  public async fetchAll(repositoryKeyword = '', minStar = 1000) {
     const pageSize = 100;
     let page = 1;
     let pages = 1;
-    let totalCount = 0;
     do {
-      console.log(page, minStar);
-      const { total_count, items } = await this.request(
+      const { total_count: totalCount, items } = await this.request(
         `https://api.github.com/search/repositories?q=${encodeURIComponent(
-          `${keyword} stars:>${minStar}`
-        )}&sort=stars&order=asc&per_page=${pageSize}&page=${page}`
+          `${repositoryKeyword} stars:>${minStar}`,
+        )}&sort=stars&order=asc&per_page=${pageSize}&page=${page}`,
       );
-      pages = total_count < 1000 ? Math.ceil(total_count / pageSize) : Math.ceil(1000 / pageSize);
-      totalCount = total_count;
-      if (!items?.length) {
+      console.log(page, totalCount, minStar, new Date().toLocaleString());
+      pages = totalCount < 1000 ? Math.ceil(totalCount / pageSize) : Math.ceil(1000 / pageSize);
+      if (!totalCount || !items?.length) {
         break;
       }
-      const list = items.map(({ full_name: name, html_url: url, description, language, stargazers_count: star, pushed_at: lastPushedAt }, index) => {
-        if (total_count > 1000 && page === pages && index + 1 === items?.length) {
+      const list = items.map((element, index) => {
+        const {
+          full_name: name,
+          html_url: url,
+          description,
+          language,
+          stargazers_count: star,
+          pushed_at: lastPushedAt,
+        } = element;
+        if (totalCount > 1000 && page === pages && index + 1 === items.length) {
           minStar = star - 1;
         }
-        return {
-          updateOne: {
-            filter: { name },
-            update: { type: 'repository', keyword, name, url, description, language, star, lastPushedAt },
-            upsert: true,
-          },
-        };
+        return [
+          name,
+          url,
+          description || '',
+          language || '',
+          star,
+          dayjs(lastPushedAt).format('YYYY-MM-DD HH:mm:ss'),
+          /[\u4e00-\u9fa5]/.test(description),
+          repositoryKeyword,
+        ];
       });
-      await this.model.bulkWrite(list);
-      await new Promise(resolve => setTimeout(resolve, 1000 * 60));
+      await this.sql.bulkUpdate(
+        'github_repository',
+        ['name', 'url', 'description', 'language', 'star', 'lastPushedAt', 'isCn', 'repositoryKeyword'],
+        list,
+      );
       page++;
     } while (page <= pages);
-    if (totalCount > 1000) {
-      return this.fetchAll(keyword, minStar);
+    if (pages === 10) {
+      return this.fetchAll(repositoryKeyword, minStar);
     }
     console.log('done');
   }
 
-  public async fetchByCode(keyword: string) {
+  public async fetchByCode(codeKeyword: string, order = 'desc') {
     const pageSize = 100;
     let page = 1;
     let pages = 1;
     do {
-      console.log(page);
-      const { total_count, items } = await this.request(
-        `https://api.github.com/search/code?q=${encodeURIComponent(keyword)}&per_page=${pageSize}&page=${page}`
+      const { total_count: totalCount, items } = await this.request(
+        `https://api.github.com/search/code?q=${encodeURIComponent(
+          codeKeyword,
+        )}&per_page=${pageSize}&page=${page}&sort=indexed&order=${order}`,
       );
-      pages = total_count < 1000 ? Math.ceil(total_count / pageSize) : Math.ceil(1000 / pageSize);
-      if (!total_count || !items?.length) {
+      console.log(page, totalCount, new Date().toLocaleString());
+      pages = totalCount < 1000 ? Math.ceil(totalCount / pageSize) : Math.ceil(1000 / pageSize);
+      if (!totalCount || !items?.length) {
         break;
       }
       const list = await Promise.all(
-        items.map(async item => {
+        items.map(async (item) => {
+          const { html_url: codeHtmlUrl, path: codePath, name: codeName } = item;
           const { full_name: name, html_url: url, description } = item.repository;
-          return { updateOne: { filter: { name }, update: { type: 'code', keyword, name, url, description }, upsert: true } };
-          // try {
-          //   const { language, star, lastPushedAt } = await this.fetchOne(name);
-          //   return {
-          //     updateOne: {
-          //       filter: { name },
-          //       update: { type: 'code', keyword, name, url, description, language, star, lastPushedAt },
-          //       upsert: true,
-          //     },
-          //   };
-          // } catch (error) {
-          //   return { updateOne: { filter: { name }, update: { type: 'code', keyword, name, url, description }, upsert: true } };
-          // }
-        })
+          request({
+            url: codeHtmlUrl.replace('github.com', 'raw.githubusercontent.com').replace('blob/', ''),
+            responseType: 'arraybuffer',
+          }).then(async (res) => {
+            await mkdir(join(this.app.getAppDir(), 'download', codePath.replace(codeName, '')), { recursive: true });
+            writeFile(join(this.app.getAppDir(), 'download', codePath.replace(codeName, ''), codeName), res.data);
+          });
+          return [name, url, description || '', /[\u4e00-\u9fa5]/.test(description), codeKeyword];
+        }),
       );
-      await this.model.bulkWrite(list);
-      await new Promise(resolve => setTimeout(resolve, 1000 * 2));
+      await this.sql.bulkUpdate('github_repository', ['name', 'url', 'description', 'isCn', 'codeKeyword'], list);
       page++;
     } while (page <= pages);
     console.log('done');
   }
 
-  private async fetchOne(name: string) {
+  public async fetchOne(name: string) {
     const {
       html_url: url,
       description,
@@ -101,32 +113,30 @@ export class GithubRepositoryService extends BaseService<GithubRepository> {
       stargazers_count: star,
       pushed_at: lastPushedAt,
     } = await this.request(`https://api.github.com/repos/${name}`);
-    return { name, url, description, language, star, lastPushedAt };
+    return { name, url, description, language, star, lastPushedAt, isCn: /[\u4e00-\u9fa5]/.test(description) };
   }
 
   private async request(url: string, retry = 3) {
     try {
-      // todo: token在https://github.com/settings/tokens获取
-      const token = '****';
       const { data } = await request({
         url,
         headers: {
           'accept': 'application/vnd.github.v3+json',
           'user-agent': 'octokit-core.js/3.4.0 Node.js/14.15.3 (win32; x64)',
-          'authorization': `token ${token}`,
+          'authorization': 'token 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',
         },
-        timeout: 10000,
+        timeout: 60000,
         validateStatus: () => true,
       });
       if (data.message) {
-        retry = 0;
+        retry = data.message.indexOf('rate') !== -1 ? 3 : 0;
         throw new Error(data.message);
       } else {
         return data;
       }
     } catch (error) {
       if (retry) {
-        await new Promise(resolve => setTimeout(resolve, 1000 * 2));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         return this.request(url, retry - 1);
       } else {
         throw error;

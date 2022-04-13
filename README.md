@@ -8,10 +8,10 @@
 
 ## 技术栈
 
-- typescript/midwayjs [文档](https://www.yuque.com/midwayjs/midway_v2 'midwayjs')
-- mongodb/typegoose [文档](https://typegoose.github.io/typegoose/ 'typegoose')
-- mongodb/mongoosejs [文档](https://mongoosejs.com/docs/guide.html 'mongoosejs')
+- typescript/midwayjs [文档](https://midwayjs.org 'midwayjs')
+- mysql/prisma [文档](https://www.prisma.io/docs/concepts 'prisma')
 - redis/ioredis [文档](https://github.com/luin/ioredis 'ioredis')
+- rbac/casbin [文档](https://casbin.org/docs/en/overview 'casbin')
 
 ## 快速开始
 
@@ -29,8 +29,8 @@ open http://localhost:7001/
 
 ### 部署
 
-如需进一步了解，参见[midway 部署文档](https://www.yuque.com/midwayjs/midway_v2/deployment 'midway部署文档')
+如需进一步了解，参见[midway 部署文档](https://midwayjs.org/docs/deployment 'midway部署文档')
 
-## 联系我(欢迎交流)
+## 请作者喝杯咖啡
 
-<img src="https://user-images.githubusercontent.com/47513562/145054555-7f644e71-d8d0-4d24-8b9e-e3b03691d7f5.jpg" width="150px">
+<img src="https://user-images.githubusercontent.com/47513562/162753279-adbf63bb-301c-44f3-808d-dd8c89a0f4c6.png" width="150px">

@@ -5,12 +5,17 @@ import { GithubRepositoryService } from '../service/repository';
 @Controller('/github/repository', { description: 'GitHub管理' })
 export class GithubRepositoryController extends BaseController {
   @Inject()
-  private readonly githubRepositoryService: GithubRepositoryService;
+  private githubRepositoryService: GithubRepositoryService;
 
-  @Get('/', { description: '获取GitHub仓库' })
-  public async index(@Query() query) {
-    const { page = 1, limit = 20, sort = { createdAt: -1 }, ...filter } = query;
-    const result = await this.githubRepositoryService.findAllWithPaginate(filter, { page, limit, sort });
-    return this.success(result);
+  @Get('/fetch-all', { description: '获取GitHub仓库' })
+  public async fetchAll(@Query('keyword') keyword: string, @Query('minStar') minStar: number) {
+    this.githubRepositoryService.fetchAll(keyword, minStar);
+    return this.success();
+  }
+
+  @Get('/fetch-by-code', { description: '通过代码获取GitHub仓库' })
+  public async fetchByCode(@Query('keyword') keyword: string) {
+    this.githubRepositoryService.fetchByCode(keyword);
+    return this.success();
   }
 }
