@@ -14,10 +14,10 @@ export class UserDto {
   public id: number;
 
   @ApiProperty()
-  public createdAt: Date;
+  public createdAt: string;
 
   @ApiProperty()
-  public updatedAt: Date;
+  public updatedAt: string;
 
   @ApiProperty()
   public status: boolean;
