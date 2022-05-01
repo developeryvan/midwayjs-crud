@@ -1,4 +1,4 @@
-import { Body, Controller, Inject, Post } from '@midwayjs/decorator';
+import { Body, Controller, Get, Inject, Post } from '@midwayjs/decorator';
 import { ApiBody } from '@midwayjs/swagger';
 import { BaseController } from '../../../core/base_controller';
 import { Jwt } from '../../../util/jwt';
@@ -18,5 +18,13 @@ export class AuthController extends BaseController {
   public async login(@Body() body) {
     const result = await this.userService.login(body);
     return this.success(result);
+  }
+
+  @Get('/info', { description: '获取登录信息' })
+  public async getInfo() {
+    const { id } = this.ctx.state.user;
+    const { username, phone, nickname, avatar, role, status } = await this.userService.findById(id);
+    const token = this.jwt.sign({ id, phone, username, role, status });
+    return this.success({ token, user: { id, username, phone, nickname, avatar, role } });
   }
 }

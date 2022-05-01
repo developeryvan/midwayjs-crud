@@ -39,8 +39,8 @@ export abstract class BaseService<T> {
     return { rows, count };
   }
 
-  public async findById(id: string, options: Partial<Options>): Promise<T> {
-    const { select, include } = options;
+  public async findById(id: string, options?: Partial<Options>): Promise<T> {
+    const { select, include } = options || {};
     const model = await this.model.findUnique({ where: { id }, select, include });
     return model;
   }
